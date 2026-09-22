@@ -1,0 +1,1590 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MécaMatériaux — Familles des matériaux, RDM &amp; Technologie mécanique</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;1,500;1,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<style>
+  :root{
+    --bg: #ffffff;
+    --bg-soft: #faf7ee;
+    --panel: #ffffff;
+    --line: #ece3c8;
+    --ink: #1b2530;
+    --ink-soft: #5b6672;
+    --navy: #123a63;
+    --blue: #b8860b;
+    --blue-dim: #fbf2d9;
+    --green: #2f8a5c;
+    --red: #c1432b;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background: var(--bg-soft);
+    color: var(--ink);
+    font-family: 'IBM Plex Sans', sans-serif;
+    line-height:1.65;
+  }
+  h1,h2,h3,.brand-name,nav,button,.tag{ font-family:'Space Grotesk', sans-serif; }
+  a{ color: var(--blue); text-decoration:none; }
+  a:hover{ text-decoration:underline; }
+  p{ max-width: 70ch; color: var(--ink); font-size:15px; }
+  ul{ padding-left:20px; }
+  li{ margin:7px 0; font-size:15px; }
+  img{ max-width:100%; height:auto; display:block; }
+
+  /* ---------------- top bar ---------------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background: #ffffff;
+    border-bottom: 1px solid var(--line);
+  }
+  .bar{
+    max-width: 1180px; margin:0 auto;
+    display:flex; align-items:center; gap:14px;
+    padding: 14px 22px;
+  }
+  .brand{ display:flex; align-items:center; gap:12px; cursor:pointer; }
+  .brand-name{ font-size:19px; font-weight:700; letter-spacing:0.01em; line-height:1.1; color: var(--navy); }
+  .brand-name .fam{ background: linear-gradient(90deg, var(--blue), var(--green)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .brand-sub{ font-size:9.5px; letter-spacing:0.09em; color: var(--ink-soft); margin-top:2px; }
+
+  .burger{
+    margin-left:auto; background:#fff; border:1px solid var(--line);
+    width:42px; height:38px; cursor:pointer; border-radius:3px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
+  }
+  .burger span{ display:block; width:20px; height:2px; background: var(--navy); }
+  .burger:hover{ border-color: var(--blue); }
+
+  .drawer-overlay{
+    position:fixed; inset:0; background: rgba(15,25,35,0.45);
+    z-index:90; display:none;
+  }
+  .drawer-overlay.open{ display:block; }
+  .drawer{
+    position:fixed; top:0; right:0; height:100vh; width:300px; max-width:82vw;
+    background: #ffffff; border-left:1px solid var(--line);
+    z-index:91; padding:22px; transform:translateX(100%); transition: transform .22s ease;
+    box-shadow: -8px 0 30px rgba(20,30,45,0.12);
+  }
+  .drawer-overlay.open .drawer{ transform:translateX(0); }
+  .drawer-close{
+    background:#fff; border:1px solid var(--line); color: var(--ink);
+    width:34px; height:34px; cursor:pointer; margin-bottom:26px; font-size:16px; border-radius:3px;
+  }
+  .drawer-group{ margin-bottom:22px; }
+  .drawer-group .dg-title{ font-size:11px; letter-spacing:0.06em; color: var(--blue); margin-bottom:8px; font-weight:600; }
+  .drawer button.dlink{
+    display:block; width:100%; text-align:left; background:none; border:none;
+    color: var(--ink); font-family:'Space Grotesk',sans-serif; font-size:15px;
+    padding:9px 4px; cursor:pointer; border-bottom:1px solid var(--line);
+  }
+  .drawer button.dlink.sub{
+    font-family:'IBM Plex Sans',sans-serif; font-size:13px; color: var(--ink-soft);
+    border-bottom:none; padding:6px 4px 6px 10px;
+  }
+  .drawer button.dlink:hover{ color: var(--blue); }
+
+  /* ---------------- layout ---------------- */
+  main{ max-width: 1180px; margin:0 auto; padding: 0 22px 100px 22px; }
+  .page{ display:none; }
+  .page.active{ display:block; }
+
+  /* ---------------- hero / accueil ---------------- */
+  .hero{
+    position:relative; overflow:hidden;
+    padding: 56px 34px 46px 34px;
+    margin: 26px 0 44px 0;
+    background: linear-gradient(120deg, var(--blue-dim) 0%, #ffffff 75%);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+  }
+  .hero-grid-bg{
+    position:absolute; inset:0; z-index:0; opacity:0.6;
+    background-image: linear-gradient(#d7e3f2 1px, transparent 1px), linear-gradient(90deg, #d7e3f2 1px, transparent 1px);
+    background-size: 34px 34px;
+    mask-image: linear-gradient(120deg, rgba(0,0,0,0.7), transparent 70%);
+  }
+  .hero-inner{ position:relative; z-index:1; max-width:640px; }
+  .kicker-line{ display:flex; align-items:center; gap:12px; margin-bottom:18px; }
+  .kicker-line .dash{ width:34px; height:1px; background: var(--blue); }
+  .kicker-line span{ font-size:12px; letter-spacing:0.12em; color: var(--blue); font-weight:600; font-family:'Space Grotesk',sans-serif; }
+  .hero h1{
+    font-family:'Playfair Display', serif;
+    font-size: 42px; font-weight:600; line-height:1.2;
+    margin:0 0 18px 0; color: var(--navy);
+  }
+  .hero h1 em{ font-style:italic; font-weight:600; color: var(--blue); }
+  .hero .tagline{ font-size:15.5px; color: var(--ink-soft); max-width:56ch; }
+  .hero-ctas{ display:flex; gap:16px; align-items:center; margin-top:28px; flex-wrap:wrap; }
+  .btn-primary{
+    background: var(--green); color:#fff; border:none; font-weight:700;
+    font-size:13px; letter-spacing:0.03em; padding:14px 22px; cursor:pointer;
+    font-family:'Space Grotesk',sans-serif; border-radius:3px;
+  }
+  .btn-link{
+    background:none; border:none; color: var(--navy); font-weight:600; font-size:13px;
+    letter-spacing:0.03em; cursor:pointer; font-family:'Space Grotesk',sans-serif;
+    display:flex; align-items:center; gap:8px;
+  }
+  .btn-link .l{ width:22px; height:1px; background: var(--navy); }
+
+  /* ---------------- utility section ---------------- */
+  .util-head{ margin-bottom:26px; }
+  .util-head h2{ font-size:24px; border-bottom:none; margin:0; font-family:'Playfair Display',serif; font-weight:600; color: var(--navy); }
+  .util-grid{ display:grid; grid-template-columns: repeat(3, 1fr); gap:20px; margin-bottom:54px; }
+  .util-card{ background: var(--panel); border:1px solid var(--line); border-radius:6px; padding:24px; }
+  .util-card .util-illus{ margin-bottom:16px; }
+  .util-card h3{ font-size:16.5px; margin:0 0 8px 0; color: var(--navy); }
+  .util-card p{ font-size:13.5px; color: var(--ink-soft); margin:0; }
+
+  .cards{
+    display:grid; grid-template-columns: repeat(3, 1fr); gap:18px; margin-top:34px;
+  }
+  .card{
+    background: var(--panel); border:1px solid var(--line); border-radius:6px;
+    padding:22px; cursor:pointer; transition: border-color .15s, box-shadow .15s;
+  }
+  .card:hover{ border-color: var(--blue); box-shadow: 0 6px 18px rgba(20,60,100,0.08); }
+  .card .c-no{ font-size:12px; color: var(--blue); font-weight:600; }
+  .card h3{ margin:10px 0 8px 0; font-size:17px; color: var(--navy); }
+  .card p{ font-size:13.5px; color: var(--ink-soft); margin:0; }
+
+  .credit{
+    margin-top: 46px; padding:20px; border:1px solid var(--line); border-radius:6px;
+    font-size:13px; color: var(--ink-soft); background: var(--panel);
+  }
+  .credit strong{ color: var(--navy); }
+
+  /* ---------------- content pages ---------------- */
+  .page-head{ padding: 40px 0 20px 0; border-bottom:1px solid var(--line); margin-bottom:8px; }
+  .page-head .kicker{ font-size:12.5px; color: var(--blue); letter-spacing:0.03em; font-weight:600; }
+  .page-head h1{ font-size:29px; font-weight:700; margin:6px 0 10px 0; color: var(--navy); }
+  .page-head p{ color: var(--ink-soft); font-size:14.5px; }
+
+  .subnav{ display:flex; gap:8px; flex-wrap:wrap; margin: 22px 0 30px 0; }
+  .subnav button{
+    background: #fff; border:1px solid var(--line); color: var(--ink-soft); border-radius:20px;
+    font-family:'IBM Plex Sans',sans-serif; font-size:13px; padding:8px 15px; cursor:pointer;
+  }
+  .subnav button:hover, .subnav button.on{ color: var(--blue); border-color: var(--blue); }
+
+  .sec{ scroll-margin-top: 90px; padding: 34px 0; max-width: 780px; display:none; }
+  .sec.active{ display:block; }
+  .sec h2{ font-size:20px; font-weight:600; margin:0 0 14px 0; color: var(--navy); }
+  .sec h2 .h2-no{ color: var(--blue); margin-right:8px; }
+  .sec h3{ font-size:15.5px; font-weight:600; margin:22px 0 8px 0; color: var(--navy); }
+
+  .formula-box{
+    background: var(--blue-dim); border:1px solid #d3e2f4; border-left:3px solid var(--blue);
+    padding:14px 18px; margin:14px 0; overflow-x:auto; border-radius: 0 4px 4px 0;
+  }
+  .formula-box .katex{ color: var(--ink); }
+
+  .diagram-box{ background: var(--panel); border:1px solid var(--line); border-radius:6px; padding:16px; margin:18px 0; }
+  .diagram-box svg{ width:100%; height:auto; display:block; }
+  .diagram-caption{ font-size:12.5px; color: var(--ink-soft); margin-top:10px; }
+
+  .photo-box{ background: var(--panel); border:1px solid var(--line); border-radius:6px; padding:10px; margin:18px 0; }
+  .photo-box img{ border-radius:3px; width:100%; }
+  .photo-caption{ font-size:12px; color: var(--ink-soft); margin-top:8px; padding:0 4px; }
+  .photo-caption a{ color: var(--ink-soft); }
+
+  .note{
+    border-left:3px solid var(--green); background: #eef7f1;
+    padding:12px 16px; font-size:14px; margin:16px 0; color: var(--ink); border-radius:0 4px 4px 0;
+  }
+  .example{
+    border-left:3px solid var(--blue); background: var(--blue-dim);
+    padding:12px 16px; font-size:14px; margin:16px 0; color: var(--ink); border-radius:0 4px 4px 0;
+  }
+  .example .ex-label{ font-weight:700; color: var(--navy); display:block; margin-bottom:4px; font-family:'Space Grotesk',sans-serif; font-size:12.5px; letter-spacing:0.03em; }
+
+  table.dof{ border-collapse:collapse; width:100%; margin:14px 0; font-size:13.5px; }
+  table.dof th, table.dof td{ border:1px solid var(--line); padding:9px 11px; text-align:left; }
+  table.dof th{ background: var(--blue-dim); color: var(--navy); font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:12.5px; }
+  table.dof tr:nth-child(even) td{ background: #fdfaf1; }
+
+  /* ---------------- quiz ---------------- */
+  .quiz-picker{ display:flex; gap:10px; flex-wrap:wrap; margin: 24px 0 30px 0; }
+  .quiz-picker button{
+    padding:10px 16px; border:1px solid var(--line); background: #fff; border-radius:20px;
+    color: var(--ink-soft); cursor:pointer; font-size:14px; font-family:'Space Grotesk',sans-serif;
+  }
+  .quiz-picker button.active{ background: var(--navy); color:#fff; border-color: var(--navy); }
+
+  .q-progress{ font-size:12.5px; color: var(--ink-soft); margin-bottom:8px; }
+  .q-card{ border:1px solid var(--line); background: var(--panel); border-radius:6px; padding:22px; margin-bottom:22px; max-width:700px; }
+  .q-prompt{ font-size:16px; font-weight:600; margin-bottom:14px; font-family:'Space Grotesk',sans-serif; color: var(--navy); }
+  .q-opt{
+    display:block; width:100%; text-align:left; padding:10px 14px; margin-bottom:8px; border-radius:4px;
+    border:1px solid var(--line); background: #fff; color: var(--ink); cursor:pointer; font-size:14px;
+    font-family:'IBM Plex Sans',sans-serif;
+  }
+  .q-opt:hover{ border-color: var(--blue); }
+  .q-opt.correct{ border-color: var(--green); background: #eaf7ef; }
+  .q-opt.wrong{ border-color: var(--red); background: #fbecea; }
+  .q-opt[disabled]{ cursor:default; }
+  .q-explain{ font-size:13.5px; color: var(--ink-soft); margin-top:12px; border-top:1px dashed var(--line); padding-top:12px; }
+  .q-next{ margin-top:14px; padding:9px 18px; background: var(--blue); color:#fff; border:none; cursor:pointer; font-size:14px; font-family:'Space Grotesk',sans-serif; border-radius:4px; }
+  .q-score{ font-size:18px; font-weight:600; color: var(--navy); }
+
+  @media (max-width: 760px){
+    .cards{ grid-template-columns: 1fr; }
+    .util-grid{ grid-template-columns: 1fr; }
+    .hero{ padding: 40px 20px; }
+    .hero h1{ font-size:30px; }
+    .theme-grid{ grid-template-columns: 1fr 1fr; }
+  }
+
+  /* ---------------- sunburst hero band (Maths pour tous style) ---------------- */
+  .hero-band{
+    position:relative; overflow:hidden; border-radius:6px; margin:26px 0 0 0;
+    padding: 46px 30px 30px 30px; text-align:center;
+    background: radial-gradient(circle at 50% -10%, #fff6df 0%, #f6d98a 45%, #e9b94f 100%);
+  }
+  .hero-band::before{
+    content:""; position:absolute; inset:0; opacity:0.35; pointer-events:none;
+    background: repeating-conic-gradient(from 0deg at 50% 0%, rgba(255,255,255,0.55) 0deg 4deg, transparent 4deg 12deg);
+    mask-image: radial-gradient(circle at 50% 0%, black 0%, transparent 70%);
+  }
+  .hero-band h1{
+    position:relative; z-index:1; font-family:'Playfair Display',serif; font-weight:700;
+    font-size:26px; color:#1b2530; margin:0; text-transform:uppercase; letter-spacing:0.02em;
+  }
+  .actu-bar{
+    background: var(--navy); color:#fff; text-align:center; padding:20px 24px;
+    font-size:16px; border-radius:0 0 6px 6px; margin-bottom:0;
+  }
+  .actu-bar .actu-tag{ color:#f2c94c; font-weight:800; text-decoration:underline; }
+  .actu-bar strong{ font-weight:700; }
+
+  .section-title-big{
+    text-align:center; font-family:'Playfair Display',serif; font-weight:700;
+    font-size:26px; color: var(--blue); margin: 40px 0 34px 0;
+  }
+
+  .theme-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:22px; margin: 0 0 44px 0; }
+  .theme-btn{
+    background: linear-gradient(160deg, #cf9a44, #a16f22);
+    border-radius:16px; padding:7px; cursor:pointer; aspect-ratio:1/1;
+    box-shadow: 0 6px 14px rgba(140,95,20,0.25);
+    transition: transform .15s;
+  }
+  .theme-btn:hover{ transform: translateY(-3px); }
+  .theme-btn-inner{
+    border:2px solid #fff; border-radius:11px; height:100%; width:100%;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding:14px; gap:8px;
+  }
+  .theme-btn-title{ color:#fff; font-weight:800; text-decoration:underline; font-size:14.5px; line-height:1.3; font-family:'Space Grotesk',sans-serif; }
+  .theme-btn-sub{ color:#fdeecb; font-size:12.5px; font-weight:500; font-family:'IBM Plex Sans',sans-serif; }
+  .theme-btn .c-no{ color:#fdeecb; font-size:11px; font-weight:700; letter-spacing:0.06em; }
+
+  .crumb-nav{
+    margin-left:auto; display:flex; align-items:center; gap:8px;
+    background:#fff; border:1px solid var(--line); border-radius:20px;
+    padding:8px 16px; cursor:pointer; font-size:13.5px;
+  }
+  .crumb-nav b{ color: var(--navy); }
+  .crumb-nav .sep{ color: var(--ink-soft); }
+  .crumb-nav .crumb-current{ color: var(--ink-soft); }
+  .crumb-nav .caret{ color: var(--blue); font-size:11px; margin-left:2px; }
+
+/* ================= RDM SIMULATOR ================= */
+.rdm-sim{margin-top:28px}
+.sim-grid{display:grid;grid-template-columns:minmax(280px,360px) 1fr;gap:22px;align-items:start}
+.sim-panel,.sim-results,.sim-graph{background:#fff;border:1px solid #dce4eb;border-radius:16px;box-shadow:0 8px 25px rgba(18,58,99,.06)}
+.sim-panel{padding:20px}
+.sim-panel h3,.sim-results h3{margin-top:0}
+.sim-form{display:grid;gap:12px}
+.sim-field label{display:block;font-weight:700;font-size:.88rem;margin-bottom:5px;color:#263746}
+.sim-field input,.sim-field select{width:100%;box-sizing:border-box;border:1px solid #cbd6df;border-radius:9px;padding:10px 11px;font:inherit;background:#fff}
+.sim-field input:focus,.sim-field select:focus{outline:2px solid rgba(31,95,168,.18);border-color:#1f5fa8}
+.sim-two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sim-help{font-size:.78rem;color:#657381;margin-top:4px;line-height:1.45}
+.sim-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:5px}
+.sim-btn{border:0;border-radius:9px;padding:10px 14px;font:inherit;font-weight:700;cursor:pointer;background:#123a63;color:#fff}
+.sim-btn.secondary{background:#eef3f7;color:#123a63}
+.sim-btn:hover{filter:brightness(.97)}
+.sim-error{display:none;margin-top:10px;padding:10px 12px;border-radius:9px;background:#fff1ee;color:#9d2f1e;border:1px solid #f1c5bc;font-size:.86rem}
+.sim-results{padding:20px}
+.sim-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
+.sim-kpi{padding:13px;border-radius:12px;background:#f6f8fa;border:1px solid #e3e8ed}
+.sim-kpi span{display:block;font-size:.75rem;color:#687785;margin-bottom:4px}
+.sim-kpi strong{font-size:1.08rem;color:#123a63}
+.sim-table{width:100%;border-collapse:collapse;margin-top:8px;font-size:.9rem}
+.sim-table th,.sim-table td{padding:8px 9px;border-bottom:1px solid #e7ebef;text-align:left}
+.sim-table th{color:#52616e;font-weight:700}
+.sim-status{margin-top:14px;padding:12px;border-radius:10px;background:#edf7f1;border:1px solid #cce6d5;color:#245d3d}
+.sim-status.warn{background:#fff7e8;border-color:#efd8a4;color:#77530d}
+.sim-graph{padding:14px;margin-top:18px}
+.sim-graph h3{margin:4px 4px 10px;font-size:1rem}
+.sim-graph svg{width:100%;height:auto;display:block}
+.sim-note{margin-top:14px;font-size:.8rem;color:#667580;line-height:1.5}
+.sim-case-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+.sim-case{padding:16px;border:1px solid #dce4eb;border-radius:14px;background:#fff}
+.sim-case h3{font-size:1rem;margin:0 0 8px;color:#123a63}
+.sim-case button{margin-top:8px}
+@media(max-width:900px){.sim-grid{grid-template-columns:1fr}.sim-kpis{grid-template-columns:1fr 1fr}.sim-case-grid{grid-template-columns:1fr}}
+@media(max-width:520px){.sim-two{grid-template-columns:1fr}.sim-kpis{grid-template-columns:1fr}.sim-panel,.sim-results{padding:15px}}
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bar">
+    <div class="brand" data-page="accueil">
+      <svg width="36" height="36" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+        <g fill="none" stroke="#3f7fd6" stroke-width="4">
+          <g id="teeth"></g>
+          <circle cx="60" cy="60" r="34"/>
+          <circle cx="60" cy="60" r="12"/>
+        </g>
+      </svg>
+      <div>
+        <div class="brand-name"><span class="fam">MécaMatériaux</span></div>
+        <div class="brand-sub">FAMILLES DES MATÉRIAUX · RDM · TECHNOLOGIE MÉCANIQUE</div>
+      </div>
+    </div>
+    <button class="crumb-nav" id="burger-btn" aria-label="Menu">
+      <b>Accueil</b><span class="sep">·</span><span class="crumb-current">Thèmes</span><span class="caret">▾</span>
+    </button>
+  </div>
+</header>
+
+<div class="drawer-overlay" id="drawer-overlay">
+  <div class="drawer">
+    <button class="drawer-close" id="drawer-close">✕</button>
+
+    <button class="dlink" data-page="accueil">Accueil</button>
+
+    <div class="drawer-group">
+      <div class="dg-title">01 · MATÉRIAUX</div>
+      <button class="dlink" data-page="materiaux">Vue d'ensemble</button>
+      <button class="dlink sub" data-page="materiaux" data-anchor="m-familles">Familles de matériaux</button>
+      <button class="dlink sub" data-page="materiaux" data-anchor="m-proprietes">Propriétés mécaniques</button>
+      <button class="dlink sub" data-page="materiaux" data-anchor="m-essais">Essais mécaniques</button>
+      <button class="dlink sub" data-page="materiaux" data-anchor="m-traitements">Traitements thermiques</button>
+      <button class="dlink sub" data-page="materiaux" data-anchor="m-choix">Choix d'un matériau</button>
+    </div>
+
+    <div class="drawer-group">
+      <div class="dg-title">02 · TECHNOLOGIE MÉCANIQUE</div>
+      <button class="dlink" data-page="techno">Vue d'ensemble</button>
+      <button class="dlink sub" data-page="techno" data-anchor="t-elements">Éléments de machine</button>
+      <button class="dlink sub" data-page="techno" data-anchor="t-assemblages">Calculs d'assemblage</button>
+    </div>
+
+    <div class="drawer-group">
+      <div class="dg-title">03 · RDM</div>
+      <button class="dlink" data-page="rdm">Vue d'ensemble</button>
+      <button class="dlink sub" data-page="rdm" data-anchor="r-hypotheses">Hypothèses</button>
+      <button class="dlink sub" data-page="rdm" data-anchor="r-torseur">Torseur de cohésion</button>
+      <button class="dlink sub" data-page="rdm" data-anchor="r-simples">Sollicitations simples</button>
+      <button class="dlink sub" data-page="rdm" data-anchor="r-composees">Sollicitations composées</button>
+      <button class="dlink sub" data-page="rdm" data-anchor="r-flambement">Flambement &amp; hyperstaticité</button>
+    </div>
+
+    <div class="drawer-group">
+      <div class="dg-title">04 · QUIZ</div>
+      <button class="dlink" data-page="quiz">Vue d'ensemble</button>
+    </div>
+
+    <div class="drawer-group">
+      <div class="dg-title">05 · À PROPOS</div>
+      <button class="dlink" data-page="apropos">Qui a créé ce site ?</button>
+    </div>
+  </div>
+</div>
+
+<main>
+
+  <!-- ================= ACCUEIL ================= -->
+  <section class="page" id="page-accueil">
+    <div class="hero-band">
+      <h1>La mécanique expliquée pour les élèves ingénieurs</h1>
+    </div>
+    <div class="actu-bar">
+      <span class="actu-tag">Actualité :</span> <strong>Bienvenue sur MécaMatériaux — familles des matériaux, technologie mécanique et RDM en un seul endroit.</strong>
+    </div>
+
+    <div class="hero">
+      <div class="hero-grid-bg"></div>
+      <div class="hero-inner">
+        <div class="kicker-line"><span class="dash"></span><span>RESSOURCE POUR ÉLÈVES INGÉNIEURS</span></div>
+        <h1>Un aperçu clair<br>de la <em>mécanique des matériaux</em>.</h1>
+        <p class="tagline">Familles de matériaux, résistance des matériaux (RDM) et notions de technologie mécanique — l'essentiel expliqué simplement, avec des quiz pour vérifier ce qui est acquis.</p>
+        <div class="hero-ctas">
+          <button class="btn-primary" data-page="materiaux">EXPLORER LES MODULES</button>
+          <button class="btn-link" data-page="quiz"><span class="l"></span>FAIRE UN QUIZ</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title-big">Les quatre thèmes</div>
+    <div class="theme-grid">
+      <div class="theme-btn" data-page="materiaux">
+        <div class="theme-btn-inner">
+          <div class="c-no">01</div>
+          <div class="theme-btn-title">FAMILLES DES<br>MATÉRIAUX</div>
+          <div class="theme-btn-sub">Propriétés, essais, traitements</div>
+        </div>
+      </div>
+      <div class="theme-btn" data-page="techno">
+        <div class="theme-btn-inner">
+          <div class="c-no">02</div>
+          <div class="theme-btn-title">TECHNOLOGIE<br>MÉCANIQUE</div>
+          <div class="theme-btn-sub">Éléments de machine, assemblages</div>
+        </div>
+      </div>
+      <div class="theme-btn" data-page="rdm">
+        <div class="theme-btn-inner">
+          <div class="c-no">03</div>
+          <div class="theme-btn-title">RDM</div>
+          <div class="theme-btn-sub">Torseur, sollicitations, flambement</div>
+        </div>
+      </div>
+      <div class="theme-btn" data-page="quiz">
+        <div class="theme-btn-inner">
+          <div class="c-no">04</div>
+          <div class="theme-btn-title">QUIZ</div>
+          <div class="theme-btn-sub">Vérifie ce qui est acquis</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="util-head">
+      <div class="kicker-line"><span class="dash"></span><span>POURQUOI CES MODULES ?</span></div>
+      <h2>À quoi ça sert dans la vie d'un ingénieur</h2>
+    </div>
+    <div class="util-grid">
+      <div class="util-card">
+        <svg class="util-illus" viewBox="0 0 160 110" width="100%" height="90">
+          <rect x="10" y="55" width="46" height="30" rx="4" fill="#3f7fd6"/>
+          <rect x="18" y="40" width="46" height="30" rx="4" fill="#4caf7d"/>
+          <rect x="26" y="25" width="46" height="30" rx="4" fill="#6fa8f0"/>
+          <circle cx="120" cy="45" r="22" fill="none" stroke="#4caf7d" stroke-width="3"/>
+          <circle cx="120" cy="45" r="7" fill="#4caf7d"/>
+          <path d="M120 23 v-8 M120 67 v8 M98 45 h-8 M142 45 h8" stroke="#4caf7d" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <h3>Matériaux</h3>
+        <p>Choisir le bon acier pour un pont, savoir pourquoi une pièce doit être trempée avant usinage : c'est le matériau qui décide, au final, si une pièce tient ou casse en service.</p>
+      </div>
+      <div class="util-card">
+        <svg class="util-illus" viewBox="0 0 160 110" width="100%" height="90">
+          <circle cx="55" cy="55" r="30" fill="none" stroke="#3f7fd6" stroke-width="4"/>
+          <circle cx="55" cy="55" r="10" fill="#3f7fd6"/>
+          <g stroke="#3f7fd6" stroke-width="5" stroke-linecap="round">
+            <path d="M55 21 v10 M55 79 v10 M21 55 h10 M79 55 h10 M31 31 l7 7 M79 79 l-7 -7 M79 31 l-7 7 M31 79 l7 -7"/>
+          </g>
+          <circle cx="118" cy="72" r="16" fill="none" stroke="#4caf7d" stroke-width="4"/>
+          <circle cx="118" cy="72" r="5" fill="#4caf7d"/>
+          <rect x="112" y="20" width="12" height="34" rx="3" fill="#4caf7d"/>
+        </svg>
+        <h3>Technologie mécanique</h3>
+        <p>Dimensionner un réducteur, choisir un roulement, sélectionner la bonne transmission : c'est le vocabulaire quotidien d'un bureau d'études en mécanique.</p>
+      </div>
+      <div class="util-card">
+        <svg class="util-illus" viewBox="0 0 160 110" width="100%" height="90">
+          <line x1="15" y1="80" x2="145" y2="80" stroke="#6fa8f0" stroke-width="5" stroke-linecap="round"/>
+          <path d="M15 80 Q80 105 145 80" fill="none" stroke="#4caf7d" stroke-width="3" stroke-dasharray="2 5"/>
+          <g stroke="#3f7fd6" stroke-width="3" stroke-linecap="round">
+            <line x1="45" y1="30" x2="45" y2="72"/><path d="M45 72 l-6 -10 h12 z" fill="#3f7fd6" stroke="none"/>
+            <line x1="80" y1="20" x2="80" y2="72"/><path d="M80 72 l-6 -10 h12 z" fill="#3f7fd6" stroke="none"/>
+            <line x1="115" y1="30" x2="115" y2="72"/><path d="M115 72 l-6 -10 h12 z" fill="#3f7fd6" stroke="none"/>
+          </g>
+        </svg>
+        <h3>RDM</h3>
+        <p>Avant de fabriquer quoi que ce soit, il faut prouver par le calcul que la pièce résistera : la RDM est l'outil de dimensionnement de base de tout ingénieur mécanicien.</p>
+      </div>
+    </div>
+
+    <div class="credit">
+      Ce site est créé par l'élève ingénieur <strong>AGOKOU Edem Elie</strong> et ses collaborateurs, pour aider les nouveaux élèves ingénieurs sur les questions de matériaux, de RDM et de technologie mécanique.
+      <button class="dlink" data-page="apropos" style="display:inline;padding:0;border:none;color:var(--blue);cursor:pointer;font-family:inherit;font-size:inherit;text-decoration:underline;">En savoir plus →</button>
+    </div>
+  </section>
+
+  <!-- ================= MATERIAUX ================= -->
+  <section class="page" id="page-materiaux">
+    <div class="page-head">
+      <div class="kicker">01 — Matériaux</div>
+      <h1>Familles des matériaux</h1>
+      <p>Ce module part de zéro : on explique ce qu'est un matériau technique, comment on le caractérise, et comment un ingénieur choisit celui qu'il va utiliser. Aucune connaissance préalable n'est nécessaire.</p>
+    </div>
+    <div class="subnav">
+      <button data-anchor="m-familles">Familles</button>
+      <button data-anchor="m-proprietes">Propriétés</button>
+      <button data-anchor="m-essais">Essais</button>
+      <button data-anchor="m-traitements">Traitements thermiques</button>
+      <button data-anchor="m-choix">Choix</button>
+    </div>
+
+    <div class="sec" id="m-familles">
+      <h2><span class="h2-no">1.1</span>Les grandes familles de matériaux</h2>
+      <p>Avant de calculer quoi que ce soit, il faut savoir <em>de quoi</em> on parle. Un ingénieur mécanicien classe les matériaux en cinq grandes familles. Chacune a un comportement très différent lorsqu'on la pousse, la tire, la chauffe ou la choque — c'est ce comportement qui détermine où on l'utilise.</p>
+
+      <h3>Les métaux ferreux (aciers et fontes)</h3>
+      <p>Ce sont des alliages à base de fer, mélangé à du carbone. Selon la quantité de carbone, on obtient des propriétés très différentes : peu de carbone (moins de 2%) donne un <strong>acier</strong>, plus riche en carbone (2 à 4%) donne une <strong>fonte</strong>. C'est la famille la plus utilisée en construction mécanique et en bâtiment : poutres, boulons, engrenages, carrosseries automobiles. Elle est solide et facile à usiner ou à souder, mais elle rouille si elle n'est pas protégée.</p>
+      <div class="photo-box">
+        <img src="images/aciers-construction.jpg" alt="Poutres et structures en acier sur un chantier de construction">
+        <div class="photo-caption">Poutres en acier sur un chantier — l'exemple le plus courant de métal ferreux en construction.</div>
+      </div>
+
+      <h3>Les métaux non ferreux</h3>
+      <p>Ce sont tous les métaux qui ne contiennent pas de fer comme élément principal : l'aluminium, le cuivre, le titane, le zinc. On les choisit souvent pour leur légèreté (l'aluminium pèse environ trois fois moins qu'un acier de même volume) ou pour leur résistance naturelle à la corrosion. On les retrouve massivement dans l'aéronautique (fuselage, ailes) et dans l'électricité (câbles en cuivre).</p>
+      <div class="photo-box">
+        <img src="images/aluminium-aeronautique.jpg" alt="Fuselage d'avion en aluminium">
+        <div class="photo-caption">Fuselage d'avion : l'aluminium est privilégié pour son excellent rapport résistance/masse.</div>
+      </div>
+
+      <h3>Les polymères (plastiques)</h3>
+      <p>Ce sont de longues chaînes moléculaires, généralement issues du pétrole. On distingue :</p>
+      <ul>
+        <li><strong>Thermoplastiques</strong> (PVC, polyéthylène...) : ils ramollissent quand on les chauffe et peuvent être refondus plusieurs fois, comme de la cire</li>
+        <li><strong>Thermodurcissables</strong> (résines époxy...) : une fois formés par une réaction chimique, ils ne peuvent plus être refondus, comme un œuf cuit qu'on ne peut pas "décuire"</li>
+        <li><strong>Élastomères</strong> (caoutchouc...) : ils peuvent se déformer énormément et reprendre leur forme initiale, comme un élastique</li>
+      </ul>
+      <p>Ils sont légers, souvent isolants électriques et thermiques, mais perdent leurs propriétés à haute température et sont moins résistants mécaniquement qu'un métal.</p>
+
+      <h3>Les céramiques</h3>
+      <p>Ce sont des matériaux minéraux (oxydes, carbures...) obtenus généralement par cuisson à très haute température. Elles résistent extrêmement bien à la chaleur et sont très dures — mais elles cassent net, sans se déformer avant, comme une assiette qui tombe par terre. On dit qu'elles sont <strong>fragiles</strong>. On les trouve dans les outils de coupe, les isolants électriques, ou les protections thermiques (boucliers de navette spatiale par exemple).</p>
+
+      <h3>Les composites</h3>
+      <p>Un composite associe deux matériaux différents pour cumuler leurs avantages : une <strong>matrice</strong> (souvent un polymère) qui enrobe et protège, et un <strong>renfort</strong> (fibres de verre ou de carbone) qui apporte la résistance mécanique. C'est un peu comme le béton armé : le béton résiste bien à la compression, l'acier à la traction, et l'association des deux donne un matériau performant dans les deux cas. Les composites sont très utilisés en aéronautique et dans le sport de haut niveau (vélos, raquettes) pour leur excellent rapport résistance/masse.</p>
+      <div class="photo-box">
+        <img src="images/fibre-de-carbone.jpg" alt="Tissu de fibre de carbone utilisé dans les matériaux composites">
+        <div class="photo-caption">Tissu de fibre de carbone : le renfort d'un composite haute performance.</div>
+      </div>
+
+      <div class="note">À retenir avant de continuer : quand on parle de "matériau", on ne parle jamais d'un bloc uniforme abstrait — on parle toujours d'une de ces cinq familles, chacune avec ses forces et ses faiblesses. Le reste de ce module explique comment on <em>mesure</em> ces forces et faiblesses.</div>
+    </div>
+
+    <div class="sec" id="m-proprietes">
+      <h2><span class="h2-no">1.2</span>Comment décrire un matériau : les propriétés mécaniques</h2>
+      <p>Dire "c'est de l'acier" ne suffit pas à un ingénieur : il existe des centaines de nuances d'acier, plus ou moins dures, plus ou moins résistantes. Pour comparer objectivement deux matériaux, on utilise des grandeurs chiffrées, obtenues par des essais normalisés (voir section 1.3).</p>
+
+      <h3>Le module de Young (E) : la raideur</h3>
+      <p>Imagine que tu tires sur un élastique et sur un fil de fer de même longueur avec la même force : l'élastique s'étire énormément, le fil de fer presque pas du tout. Le module de Young mesure exactement ça : la raideur du matériau, c'est-à-dire sa résistance à se déformer élastiquement (de façon réversible) sous une contrainte.</p>
+      <div class="formula-box">$$\sigma = E \cdot \varepsilon$$</div>
+      <p>Avec $\sigma$ la contrainte appliquée (en pascals, Pa) et $\varepsilon$ la déformation relative (sans unité, c'est un allongement divisé par une longueur). Plus $E$ est grand, plus le matériau est raide : l'acier a un $E$ d'environ 210 000 MPa, contre seulement quelques MPa pour du caoutchouc.</p>
+
+      <h3>La limite d'élasticité (Re) et la résistance à la traction (Rm)</h3>
+      <p>Reprends ton élastique : jusqu'à un certain point, il reprend sa forme quand tu le relâches (domaine <strong>élastique</strong>). Mais si tu tires trop fort, il reste étiré définitivement, voire il casse (domaine <strong>plastique</strong>, puis rupture).</p>
+      <ul>
+        <li><strong>Re (limite d'élasticité)</strong> : la contrainte à partir de laquelle la déformation devient permanente (le matériau ne revient plus à sa forme initiale)</li>
+        <li><strong>Rm (résistance à la traction)</strong> : la contrainte maximale que le matériau peut supporter avant de commencer à se rompre</li>
+        <li><strong>A% (allongement à la rupture)</strong> : de combien le matériau s'est allongé, en pourcentage, juste avant de casser — un indicateur de <strong>ductilité</strong> (capacité à se déformer avant rupture)</li>
+      </ul>
+      <div class="diagram-box">
+        <svg viewBox="0 0 480 300" xmlns="http://www.w3.org/2000/svg">
+          <line x1="50" y1="260" x2="450" y2="260" stroke="#5b6672" stroke-width="1.5"/>
+          <line x1="50" y1="260" x2="50" y2="20" stroke="#5b6672" stroke-width="1.5"/>
+          <text x="455" y="264" font-size="12" fill="#5b6672" font-family="Space Grotesk, sans-serif">ε (déformation)</text>
+          <text x="10" y="18" font-size="12" fill="#5b6672" font-family="Space Grotesk, sans-serif">σ</text>
+          <path d="M50,260 C110,200 130,120 155,95 Q220,60 300,55 Q370,52 410,40" fill="none" stroke="#1f5fa8" stroke-width="2.5"/>
+          <circle cx="155" cy="95" r="4" fill="#c1432b"/>
+          <line x1="155" y1="95" x2="155" y2="260" stroke="#c1432b" stroke-width="1" stroke-dasharray="3 3"/>
+          <text x="120" y="280" font-size="11" fill="#c1432b" font-family="Space Grotesk, sans-serif">Re</text>
+          <circle cx="370" cy="46" r="4" fill="#2f8a5c"/>
+          <line x1="370" y1="46" x2="370" y2="260" stroke="#2f8a5c" stroke-width="1" stroke-dasharray="3 3"/>
+          <text x="360" y="280" font-size="11" fill="#2f8a5c" font-family="Space Grotesk, sans-serif">Rm</text>
+          <circle cx="410" cy="40" r="4" fill="#1b2530"/>
+          <text x="395" y="30" font-size="11" fill="#1b2530" font-family="Space Grotesk, sans-serif">rupture</text>
+          <text x="70" y="230" font-size="10.5" fill="#5b6672" font-family="Space Grotesk, sans-serif">domaine élastique</text>
+          <text x="230" y="85" font-size="10.5" fill="#5b6672" font-family="Space Grotesk, sans-serif">domaine plastique</text>
+        </svg>
+        <div class="diagram-caption">Courbe contrainte-déformation obtenue lors d'un essai de traction : la pente initiale donne E, le premier repère donne Re, le sommet donne Rm.</div>
+      </div>
+
+      <h3>Les autres grandeurs importantes</h3>
+      <ul>
+        <li><strong>Dureté</strong> : résistance à la pénétration d'un objet dur (un peu comme planter une pointe dans du bois tendre vs du bois dur)</li>
+        <li><strong>Résilience</strong> : capacité à absorber un choc brutal sans casser (une pièce peut être résistante en traction lente, mais casser sous un choc rapide)</li>
+        <li><strong>Ténacité</strong> : capacité à empêcher une fissure déjà présente de se propager — essentiel pour la sécurité des structures (avions, ponts)</li>
+        <li><strong>Limite d'endurance</strong> : la contrainte en dessous de laquelle une pièce peut subir des efforts répétés (des millions de cycles) sans finir par casser par fatigue, même si chaque effort pris isolément est loin de la rupture</li>
+      </ul>
+      <div class="example"><span class="ex-label">Exemple concret</span>Un trombone plié une fois ne casse pas. Plié-déplié plusieurs dizaines de fois au même endroit, il finit par casser, même si chaque pliage individuel semble anodin. C'est de la <strong>fatigue</strong> — exactement le phénomène que la limite d'endurance permet de prévenir sur une vraie pièce mécanique.</div>
+    </div>
+
+    <div class="sec" id="m-essais">
+      <h2><span class="h2-no">1.3</span>Comment mesure-t-on tout ça ? Les essais mécaniques</h2>
+      <p>Les grandeurs vues ci-dessus ne sont pas données par magie : elles sont mesurées en laboratoire par des essais normalisés, reproductibles d'un pays à l'autre.</p>
+
+      <h3>L'essai de traction</h3>
+      <p>On prend une éprouvette (un échantillon normalisé, souvent en forme d'haltère) et on l'étire progressivement dans une machine jusqu'à la rupture, en mesurant en continu la force appliquée et l'allongement. On obtient directement la courbe contrainte-déformation vue plus haut, et donc $E$, $R_e$, $R_m$ et $A\%$.</p>
+      <div class="photo-box">
+        <img src="images/machine-essai-traction.jpg" alt="Machine d'essai de traction universelle en laboratoire">
+        <div class="photo-caption">Machine d'essai de traction : l'éprouvette est fixée par les deux mors et étirée jusqu'à rupture.</div>
+      </div>
+
+      <h3>Les essais de dureté</h3>
+      <p>On enfonce un indenteur (une pointe très dure) dans la surface du matériau avec une force connue, et on mesure la taille de l'empreinte laissée (plus l'empreinte est petite, plus le matériau est dur). Trois méthodes courantes :</p>
+      <ul>
+        <li><strong>Brinell</strong> : indenteur en forme de bille</li>
+        <li><strong>Vickers</strong> : indenteur en forme de pyramide en diamant, adapté aux pièces fines ou aux petites zones</li>
+        <li><strong>Rockwell</strong> : cône ou bille, avec une lecture directe de la dureté sur la machine, sans avoir à mesurer l'empreinte au microscope</li>
+      </ul>
+      <div class="photo-box">
+        <img src="images/durometre-rockwell.jpg" alt="Duromètre Rockwell mesurant la dureté d'une pièce métallique">
+        <div class="photo-caption">Duromètre Rockwell : l'indenteur s'enfonce dans la pièce et la dureté se lit directement sur le cadran.</div>
+      </div>
+
+      <h3>L'essai de résilience (Charpy)</h3>
+      <p>On entaille une éprouvette (pour créer un point faible contrôlé), puis on la casse d'un seul coup avec un pendule lâché d'une hauteur connue. L'énergie absorbée par la rupture (déduite de la hauteur de remontée du pendule après l'impact) donne la résilience du matériau — un indicateur particulièrement important à basse température, où de nombreux métaux deviennent plus fragiles.</p>
+    </div>
+
+    <div class="sec" id="m-traitements">
+      <h2><span class="h2-no">1.4</span>Traitements thermiques : modifier les propriétés sans changer la matière</h2>
+      <p>Un même acier peut avoir des propriétés très différentes selon la façon dont on l'a chauffé puis refroidi. C'est tout l'intérêt des traitements thermiques : améliorer les propriétés d'une pièce sans changer sa composition chimique.</p>
+      <div class="photo-box">
+        <img src="images/trempe-acier.jpg" alt="Pièce d'acier chauffée au rouge plongée dans un bain de trempe">
+        <div class="photo-caption">Trempe : une pièce chauffée au rouge est refroidie brutalement, souvent dans l'eau ou l'huile.</div>
+      </div>
+      <ul>
+        <li><strong>Trempe</strong> : on chauffe puis on refroidit très rapidement (dans l'eau ou l'huile). Cela bloque la structure interne du métal dans un état très dur, mais aussi plus fragile — un peu comme un caramel qu'on refroidit vite devient cassant plutôt que mou</li>
+        <li><strong>Revenu</strong> : après une trempe, on réchauffe modérément la pièce. Cela redonne un peu de ténacité (moins de fragilité) en sacrifiant une petite partie de la dureté gagnée — presque toujours utilisé après une trempe</li>
+        <li><strong>Recuit</strong> : on chauffe puis on laisse refroidir très lentement. Cela relâche les contraintes internes accumulées (par exemple après un usinage ou un soudage) et adoucit le matériau, le rendant plus facile à usiner ensuite</li>
+        <li><strong>Cémentation</strong> : on enrichit en carbone uniquement la surface de la pièce (par un traitement chimique à chaud), ce qui la durcit en surface tout en gardant un cœur plus ductile — utile pour des dents d'engrenage qui doivent résister à l'usure en surface sans être fragiles dans la masse</li>
+      </ul>
+      <div class="example"><span class="ex-label">À retenir</span>Trempe seule = dur mais fragile. Trempe + revenu = dur et suffisamment tenace pour un usage réel. C'est pour cela qu'on ne trempe presque jamais une pièce sans revenu derrière.</div>
+    </div>
+
+    <div class="sec" id="m-choix">
+      <h2><span class="h2-no">1.5</span>Comment choisir un matériau en pratique</h2>
+      <p>Un choix de matériau se raisonne rarement sur un seul critère : un ingénieur arbitre toujours entre plusieurs contraintes qui tirent parfois dans des directions opposées.</p>
+      <ul>
+        <li><strong>Rapport résistance/masse</strong> : central en aéronautique et en automobile, où chaque kilogramme économisé compte (consommation de carburant, performance)</li>
+        <li><strong>Coût matière et coût de mise en œuvre</strong> : un matériau très performant mais impossible à usiner ou à souder facilement peut coûter bien plus cher au final que prévu</li>
+        <li><strong>Résistance à la corrosion et à la fatigue</strong> selon l'environnement d'utilisation (une pièce immergée en eau salée n'a pas les mêmes contraintes qu'une pièce en intérieur)</li>
+        <li><strong>Disponibilité et recyclabilité</strong> : un matériau rare ou difficile à recycler peut être écarté même s'il est techniquement excellent</li>
+      </ul>
+      <div class="note">Ce sont ces mêmes propriétés (E, Re, Rm) qui réapparaissent comme données d'entrée dans tous les calculs de RDM du module suivant : une fois qu'on sait ce qu'est un matériau et comment le caractériser, on peut passer au calcul des pièces qu'on fabrique avec.</div>
+    </div>
+  </section>
+
+  <!-- ================= TECHNOLOGIE MECANIQUE ================= -->
+  <section class="page" id="page-techno">
+    <div class="page-head">
+      <div class="kicker">02 — Technologie mécanique</div>
+      <h1>Technologie mécanique</h1>
+      <p>Une initiation complète, en partant de zéro : les briques de base qu'on retrouve dans presque tous les mécanismes, puis une idée générale (sans les formules détaillées, vues plus tard en cours) de comment on vérifie un assemblage.</p>
+    </div>
+    <div class="subnav">
+      <button data-anchor="t-elements">Éléments de machine</button>
+      <button data-anchor="t-assemblages">Calculs d'assemblage</button>
+    </div>
+
+    <div class="sec" id="t-elements">
+      <h2><span class="h2-no">2.1</span>Éléments de machine</h2>
+      <p>Un mécanisme complexe (une voiture, une machine-outil, un vélo) n'est jamais conçu d'un bloc : il est construit à partir d'un petit nombre de briques de base, standardisées, qu'on combine entre elles. Apprendre à les reconnaître est la première étape pour comprendre n'importe quel plan mécanique.</p>
+
+      <h3>Les liaisons mécaniques</h3>
+      <p>Quand deux pièces sont en contact, une question se pose toujours : quels mouvements l'une peut-elle encore faire par rapport à l'autre ? On appelle ça les <strong>degrés de liberté (ddl)</strong> : 3 translations possibles (avant/arrière, gauche/droite, haut/bas) et 3 rotations possibles, soit 6 ddl au maximum si les pièces ne se touchent pas du tout. Une liaison mécanique est justement ce qui vient <em>retirer</em> certains de ces mouvements.</p>
+      <table class="dof">
+        <tr><th>Liaison</th><th>Translations libres</th><th>Rotations libres</th><th>Exemple concret</th></tr>
+        <tr><td>Encastrement</td><td>0</td><td>0</td><td>Un pied de table vissé au sol</td></tr>
+        <tr><td>Pivot</td><td>0</td><td>1</td><td>Une charnière de porte</td></tr>
+        <tr><td>Glissière</td><td>1</td><td>0</td><td>Un tiroir qui coulisse</td></tr>
+        <tr><td>Rotule (sphérique)</td><td>0</td><td>3</td><td>Une articulation d'épaule, un joystick</td></tr>
+      </table>
+      <div class="example"><span class="ex-label">Comment lire ce tableau</span>Une porte sur ses gonds ne peut ni glisser ni se déplacer (0 translation), mais peut tourner autour d'un seul axe (1 rotation) : c'est exactement une liaison pivot.</div>
+
+      <h3>Roues et engrenages</h3>
+      <p>Un engrenage sert à transmettre un mouvement de rotation d'un arbre à un autre, par simple contact de dents — comme deux vélos dont les pédaliers seraient reliés par des dents qui s'imbriquent. Ce qui est remarquable, c'est que le rapport de vitesse entre les deux roues ne dépend que du nombre de dents de chacune, pas de leur taille ou de leur matériau :</p>
+      <div class="formula-box">$$r = \dfrac{\omega_2}{\omega_1} = \dfrac{Z_1}{Z_2}$$</div>
+      <p>Avec $\omega$ la vitesse de rotation (en rad/s) et $Z$ le nombre de dents de chaque roue. Concrètement : si une petite roue de 10 dents entraîne une grande roue de 40 dents, la grande roue tournera 4 fois moins vite, mais avec un couple 4 fois plus grand (c'est le même principe qu'un dérailleur de vélo). On distingue trois types principaux : les engrenages <strong>droits</strong> (axes parallèles, les plus simples), <strong>hélicoïdaux</strong> (dents inclinées, plus silencieux car plusieurs dents sont en contact en même temps) et <strong>coniques</strong> (pour changer la direction de la transmission, par exemple à 90°).</p>
+      <div class="photo-box">
+        <img src="images/engrenages-boite-vitesses.jpg" alt="Engrenages d'une boîte de vitesses mécanique">
+        <div class="photo-caption">Train d'engrenages d'une boîte de vitesses : chaque paire de roues donne un rapport de transmission différent.</div>
+      </div>
+
+      <h3>Transmission de puissance</h3>
+      <p>Au-delà des engrenages, il existe d'autres façons de transmettre un mouvement de rotation entre deux arbres non directement reliés :</p>
+      <ul>
+        <li><strong>Poulies-courroies</strong> : une courroie souple relie deux poulies, un peu comme sur un vélo d'appartement. Simple et silencieux, mais elle peut glisser si l'effort demandé devient trop important</li>
+        <li><strong>Chaînes</strong> (comme sur un vélo classique) : les maillons s'imbriquent dans les dents d'un pignon, donc aucun glissement possible même sous fort couple</li>
+        <li><strong>Accouplements</strong> : relient directement deux arbres bout à bout, de façon rigide ou avec une petite souplesse pour tolérer un léger défaut d'alignement</li>
+      </ul>
+      <p>Dans tous les cas, la puissance mécanique transmise par un arbre en rotation obéit à la même relation simple :</p>
+      <div class="formula-box">$$P = C \cdot \omega$$</div>
+      <p>La puissance $P$ (en watts) est le produit du couple transmis $C$ (en N·m) par la vitesse de rotation $\omega$ (en rad/s) — exactement comme, en translation, la puissance est le produit d'une force par une vitesse.</p>
+
+      <h3>Roulements et guidage en rotation</h3>
+      <p>Un arbre qui tourne doit être guidé sans trop de frottement, sinon on perd de l'énergie et on use les pièces prématurément. C'est le rôle des roulements :</p>
+      <ul>
+        <li><strong>Roulements à billes</strong> : le contact entre les pièces se fait par des billes, un contact quasi ponctuel. Peu de frottement, adapté aux charges modérées à vitesse élevée</li>
+        <li><strong>Roulements à rouleaux</strong> : le contact se fait par des cylindres, une surface de contact plus grande (linéique) qui supporte des charges plus importantes</li>
+        <li><strong>Coussinets</strong> (paliers lisses) : une simple bague qui glisse directement contre l'arbre, sans élément roulant — solution simple et bon marché à faible vitesse, mais nécessitant souvent une lubrification</li>
+      </ul>
+      <div class="photo-box">
+        <img src="images/roulement-a-billes-coupe.jpg" alt="Roulement à billes en coupe montrant les billes et les bagues">
+        <div class="photo-caption">Roulement à billes en coupe : les billes roulent entre une bague intérieure (fixée sur l'arbre) et une bague extérieure (fixée sur le bâti).</div>
+      </div>
+
+      <h3>Vis, boulons et écrous</h3>
+      <p>C'est la solution d'assemblage la plus répandue en mécanique, car elle est démontable (contrairement à une soudure ou un rivetage). Il faut distinguer plusieurs pièces qu'on confond souvent :</p>
+      <ul>
+        <li><strong>Vis</strong> : une tige filetée avec une tête, qui se visse directement dans un trou taraudé de la pièce (pas besoin d'écrou)</li>
+        <li><strong>Boulon</strong> : l'ensemble formé d'une vis (à tête, sans filetage dans la pièce) et d'un écrou séparé, qui vient se visser à l'autre extrémité — utilisé quand on ne peut pas ou ne veut pas tarauder la pièce elle-même</li>
+        <li><strong>Goujon</strong> : une tige filetée aux deux extrémités, sans tête, vissée d'un côté dans la pièce et recevant un écrou de l'autre côté</li>
+      </ul>
+      <p>On les caractérise principalement par leur <strong>diamètre nominal</strong> $d$ (le diamètre extérieur du filetage, par exemple M8 pour un diamètre de 8 mm) et leur <strong>pas</strong> (la distance entre deux filets consécutifs, qui détermine de combien la vis avance à chaque tour). La forme de la tête (hexagonale, cruciforme, Torx...) est choisie selon l'outil de serrage disponible et l'esthétique recherchée.</p>
+      <div class="photo-box">
+        <img src="images/vis-boulons-ecrous.jpg" alt="Assortiment de vis, boulons et écrous mécaniques">
+        <div class="photo-caption">Différents types de vis, boulons et écrous : la forme de la tête et le type de filetage se choisissent selon l'application.</div>
+      </div>
+
+      <h3>Rondelles</h3>
+      <p>Une rondelle est une petite pièce plate percée qu'on place entre la tête de vis (ou l'écrou) et la pièce serrée. Elle a plusieurs rôles selon son type :</p>
+      <ul>
+        <li><strong>Rondelle plate</strong> : répartit la pression de serrage sur une surface plus large, pour éviter que la tête de vis ne s'enfonce ou n'abîme une pièce tendre</li>
+        <li><strong>Rondelle élastique (grower, éventail...)</strong> : se comprime légèrement lors du serrage et exerce un effort de rappel permanent, ce qui limite le risque de desserrage spontané sous vibrations</li>
+        <li><strong>Rondelle frein (à picots, à encoches...)</strong> : bloque mécaniquement la rotation de l'écrou une fois serré, en s'accrochant à la pièce ou à l'écrou lui-même</li>
+      </ul>
+      <div class="photo-box">
+        <img src="images/rondelles-mecaniques.jpg" alt="Différents types de rondelles mécaniques">
+        <div class="photo-caption">Rondelles plates et rondelles élastiques : un détail qui semble mineur, mais qui évite bien des desserrages sous vibrations.</div>
+      </div>
+
+      <h3>Clavettes et cannelures</h3>
+      <p>Quand on monte une pièce (poulie, engrenage, volant) sur un arbre, il faut souvent l'empêcher de tourner "dans le vide" par rapport à l'arbre, tout en pouvant la démonter facilement — un simple serrage par frottement ne suffit pas toujours. Deux solutions courantes :</p>
+      <ul>
+        <li><strong>Clavette</strong> : une petite pièce rectangulaire (ou ronde, selon le type) insérée moitié dans une rainure de l'arbre, moitié dans une rainure du moyeu. Elle empêche toute rotation relative entre les deux pièces, comme une cheville qui bloque deux planches entre elles</li>
+        <li><strong>Cannelures</strong> : au lieu d'une seule clavette, on taille directement plusieurs "dents" tout autour de l'arbre et du moyeu, qui s'imbriquent comme un engrenage intérieur. Cette solution répartit l'effort sur toute la circonférence plutôt que sur une seule clavette, ce qui la rend adaptée aux couples élevés (boîtes de vitesses, arbres de transmission automobile)</li>
+      </ul>
+      <div class="photo-box">
+        <img src="images/clavette-arbre-moyeu.jpg" alt="Clavette insérée entre un arbre et un moyeu">
+        <div class="photo-caption">Clavette montée entre un arbre et un moyeu : elle empêche toute rotation relative entre les deux pièces.</div>
+      </div>
+    </div>
+
+    <div class="sec" id="t-assemblages">
+      <h2><span class="h2-no">2.2</span>Comment sont dimensionnés les assemblages</h2>
+      <p>Une fois qu'on sait quels éléments existent (vis, clavette, frettage...), une question reste : comment choisit-on leur taille pour une application donnée ? Voici le raisonnement suivi par un ingénieur, sans entrer dans les formules — elles seront vues plus tard, en cours de dimensionnement.</p>
+
+      <h3>Comment on dimensionne un assemblage vissé</h3>
+      <p>Le principe de départ : en serrant l'écrou (ou la vis), on tend la vis comme un ressort, ce qui plaque les deux pièces l'une contre l'autre avec une certaine force de serrage. C'est cette force de serrage, et non la vis elle-même, qui empêche les pièces de glisser sous l'effort de service — un peu comme deux mains qui se serrent fort l'une contre l'autre empêchent un objet coincé entre elles de tomber, même sans le tenir directement.</p>
+      <p>Pour dimensionner l'assemblage, on part de l'effort que les pièces doivent supporter en service, puis on remonte : combien de force de serrage faut-il pour que le frottement entre les pièces empêche tout glissement, avec une marge de sécurité ? Cette force de serrage détermine à son tour le diamètre de vis nécessaire (une vis plus grosse résiste à une force de serrage plus élevée sans se rompre), et le couple de serrage à appliquer à la clé pour l'atteindre. Si une seule vis ne suffit pas, on répartit l'effort sur plusieurs vis plutôt que d'utiliser une vis surdimensionnée. On choisit aussi le nombre et le type de rondelles selon que la pièce est tendre (risque de marquage) ou soumise à des vibrations (risque de desserrage).</p>
+
+      <h3>Comment on dimensionne une clavette</h3>
+      <p>Ici, la logique est différente : la taille de la clavette (largeur, hauteur) est presque toujours <strong>normalisée</strong> en fonction du diamètre de l'arbre — il existe des tables qui donnent directement les dimensions standard à utiliser, l'ingénieur n'a pas à les recalculer à chaque fois. La vraie variable de conception, c'est la <strong>longueur</strong> de la clavette : plus le couple à transmettre est important, plus il faut une clavette longue, pour répartir l'effort sur une plus grande surface de contact et éviter que la clavette ne se cisaille ou ne s'écrase localement dans sa rainure.</p>
+      <p>Si la longueur nécessaire devient trop grande par rapport à la place disponible sur l'arbre, deux solutions : répartir l'effort sur deux clavettes plutôt qu'une, ou changer complètement de solution technologique en passant aux cannelures, qui répartissent l'effort tout autour de l'arbre plutôt que sur un seul point.</p>
+
+      <h3>Comment on dimensionne un frettage</h3>
+      <p>Le paramètre clé ici est le <strong>serrage diamétral</strong> : de combien l'arbre est-il légèrement plus gros que l'alésage du moyeu, avant montage (typiquement quelques centièmes de millimètre). Plus ce serrage est important, plus la pression de contact entre les deux pièces est élevée, et donc plus le couple transmissible par frottement (sans clavette ni perçage) est grand.</p>
+      <p>Mais on ne peut pas augmenter le serrage indéfiniment : un serrage trop important risque de dépasser la limite d'élasticité du moyeu (voir le module Matériaux) et de le fissurer, surtout s'il est en matériau plutôt fragile comme une fonte. Dimensionner un frettage, c'est donc trouver le compromis entre serrage suffisant pour transmettre le couple voulu, et serrage raisonnable pour ne pas endommager les pièces — un compromis d'autant plus délicat que la température de service varie (un moyeu qui chauffe se dilate et peut perdre une partie de son serrage).</p>
+
+      <h3>Comment on dimensionne une soudure ou un rivetage</h3>
+      <p>Pour une soudure, le raisonnement part de l'effort à transmettre entre les deux tôles assemblées : plus cet effort est important, plus le cordon de soudure doit être long et épais pour le répartir sur une plus grande section de métal d'apport. Le choix du procédé de soudage (à l'arc, TIG, MIG...) dépend surtout de l'épaisseur des pièces et du type de métal.</p>
+      <p>Pour un rivetage, la logique ressemble à celle de la clavette : plus l'effort à transmettre est grand, plus il faut des rivets de diamètre important, ou en plus grand nombre, répartis pour ne pas trop affaiblir localement la tôle percée à chaque trou.</p>
+
+      <div class="photo-box">
+        <img src="images/assemblage-boulonne.jpg" alt="Assemblage boulonné entre deux pièces métalliques">
+        <div class="photo-caption">Assemblage boulonné : la force de serrage, réglée par le couple appliqué à l'écrou, maintient les pièces plaquées l'une contre l'autre.</div>
+      </div>
+      <div class="note">Le point commun à tous ces raisonnements : on part toujours de l'effort réel que la pièce doit supporter en service, on ajoute une marge de sécurité, puis on en déduit la taille ou le nombre d'éléments d'assemblage nécessaires — jamais l'inverse. C'est exactement ce raisonnement, rendu quantitatif avec de vraies formules, qui sera développé en détail dans le module RDM.</div>
+    </div>
+  </section>
+
+  <!-- ================= RDM ================= -->
+  <section class="page" id="page-rdm">
+    <div class="page-head">
+      <div class="kicker">03 — RDM</div>
+      <h1>Résistance des matériaux</h1>
+      <p>La RDM répond à une question très concrète : si j'applique telle force sur telle pièce, va-t-elle casser, se déformer trop, ou tenir sans problème ? C'est le calcul de dimensionnement au cœur du métier d'ingénieur mécanicien.</p>
+    </div>
+    <div class="subnav">
+      <button data-anchor="r-hypotheses">Hypothèses</button>
+      <button data-anchor="r-torseur">Torseur de cohésion</button>
+      <button data-anchor="r-simples">Sollicitations simples</button>
+      <button data-anchor="r-composees">Sollicitations composées</button>
+      <button data-anchor="r-flambement">Flambement</button>
+      <button data-anchor="r-simulateur">Simulateur</button>
+    </div>
+
+    <div class="sec" id="r-hypotheses">
+      <h2><span class="h2-no">3.1</span>Hypothèses fondamentales</h2>
+      <p>Calculer exactement ce qui se passe dans une pièce réelle, en trois dimensions, serait extrêmement compliqué. La RDM simplifie le problème en se limitant à un objet très courant en mécanique : la <strong>poutre</strong>, c'est-à-dire un solide beaucoup plus long que large (un arbre, une barre, une aile de toit). Pour rendre le calcul possible à la main, on pose quelques hypothèses simplificatrices :</p>
+      <ul>
+        <li>La poutre est définie par sa <strong>ligne moyenne</strong> (le trait qui passe par le centre de chaque section) et sa <strong>section droite</strong> (la forme de sa coupe transversale)</li>
+        <li><strong>Hypothèse de Navier-Bernoulli</strong> : une section plane, perpendiculaire à la ligne moyenne avant déformation, reste plane après déformation (elle ne se gondole pas)</li>
+        <li>Le matériau est supposé <strong>homogène</strong> (les mêmes propriétés partout), <strong>isotrope</strong> (les mêmes propriétés dans toutes les directions) et suit la <strong>loi de Hooke</strong> dans le domaine élastique — d'où l'importance des grandeurs $E$ et $R_e$ vues dans le module Matériaux</li>
+        <li>On reste dans l'hypothèse des <strong>petites déformations</strong> : la pièce ne change pas significativement de forme géométrique pendant le calcul</li>
+      </ul>
+    </div>
+
+    <div class="sec" id="r-torseur">
+      <h2><span class="h2-no">3.2</span>Le torseur de cohésion</h2>
+      <p>Imagine qu'on coupe virtuellement la poutre en deux, à un endroit donné, et qu'on regarde ce que la partie de droite doit "exercer" sur la partie de gauche pour que tout reste en équilibre. Ce sont ces efforts internes, cachés à l'intérieur de la matière, que la RDM cherche à calculer. On les regroupe en un ensemble appelé <strong>torseur de cohésion</strong>, qui comprend :</p>
+      <ul>
+        <li><strong>Effort normal $N$</strong> : tend à étirer ou comprimer la poutre dans le sens de sa longueur</li>
+        <li><strong>Efforts tranchants $T_y, T_z$</strong> : tendent à faire glisser une section par rapport à l'autre, perpendiculairement à la poutre</li>
+        <li><strong>Moment de torsion $M_t$</strong> : tend à faire "vriller" la poutre sur elle-même</li>
+        <li><strong>Moments fléchissants $M_{fy}, M_{fz}$</strong> : tendent à faire plier la poutre</li>
+      </ul>
+      <div class="diagram-box">
+        <svg viewBox="0 0 640 200" xmlns="http://www.w3.org/2000/svg">
+          <line x1="60" y1="120" x2="580" y2="120" stroke="#1b2530" stroke-width="2"/>
+          <polygon points="60,120 45,150 75,150" fill="none" stroke="#1b2530" stroke-width="1.5"/>
+          <line x1="40" y1="150" x2="80" y2="150" stroke="#1b2530" stroke-width="1.5"/>
+          <circle cx="580" cy="132" r="9" fill="none" stroke="#1b2530" stroke-width="1.5"/>
+          <line x1="560" y1="150" x2="600" y2="150" stroke="#1b2530" stroke-width="1.5"/>
+          <g stroke="#1f5fa8" stroke-width="1.5">
+            <line x1="140" y1="70" x2="140" y2="118"/><polygon points="140,118 135,106 145,106" fill="#1f5fa8"/>
+            <line x1="220" y1="70" x2="220" y2="118"/><polygon points="220,118 215,106 225,106" fill="#1f5fa8"/>
+            <line x1="300" y1="70" x2="300" y2="118"/><polygon points="300,118 295,106 305,106" fill="#1f5fa8"/>
+            <line x1="380" y1="70" x2="380" y2="118"/><polygon points="380,118 375,106 385,106" fill="#1f5fa8"/>
+            <line x1="460" y1="70" x2="460" y2="118"/><polygon points="460,118 455,106 465,106" fill="#1f5fa8"/>
+          </g>
+          <line x1="140" y1="70" x2="460" y2="70" stroke="#1f5fa8" stroke-width="1.5"/>
+          <text x="290" y="55" fill="#1b2530" font-size="13" font-family="Space Grotesk, sans-serif">charge répartie q(x)</text>
+          <line x1="320" y1="120" x2="320" y2="180" stroke="#5b6672" stroke-width="1" stroke-dasharray="4 3"/>
+          <text x="326" y="176" fill="#5b6672" font-size="12" font-family="Space Grotesk, sans-serif">coupure — section x</text>
+        </svg>
+        <div class="diagram-caption">Poutre sur appuis (rotule + appui simple), charge répartie et coupure fictive utilisée pour extraire le torseur de cohésion à l'abscisse x.</div>
+      </div>
+      <div class="photo-box">
+        <img src="images/pont-poutres-flexion.jpg" alt="Pont métallique dont les poutres travaillent en flexion">
+        <div class="photo-caption">Un pont est l'exemple le plus visuel de poutres soumises à un torseur de cohésion complexe (flexion, effort tranchant) sous le poids du trafic.</div>
+      </div>
+    </div>
+
+    <div class="sec" id="r-simples">
+      <h2><span class="h2-no">3.3</span>Sollicitations simples</h2>
+      <p>On appelle "sollicitation simple" le cas où un seul type d'effort domine dans le torseur de cohésion. Ce sont les quatre cas de base à bien maîtriser avant de les combiner.</p>
+      <h3>Traction / compression</h3>
+      <p>La poutre est tirée (traction) ou écrasée (compression) dans le sens de sa longueur, comme un câble qui soutient une charge.</p>
+      <div class="formula-box">$$\sigma = \dfrac{N}{S}, \qquad \sigma = E\,\varepsilon$$</div>
+      <h3>Cisaillement</h3>
+      <p>Deux sections voisines ont tendance à glisser l'une par rapport à l'autre, comme quand on coupe une feuille de papier avec des ciseaux.</p>
+      <div class="formula-box">$$\tau = \dfrac{T}{S}$$</div>
+      <h3>Torsion</h3>
+      <p>La poutre est vrillée sur elle-même, comme quand on essore un linge en le tordant.</p>
+      <div class="formula-box">$$\tau(r) = \dfrac{M_t\, r}{I_0}, \qquad \theta' = \dfrac{M_t}{G\,I_0}$$</div>
+      <h3>Flexion</h3>
+      <p>La poutre se plie, comme une règle qu'on plie entre les deux mains — c'est la sollicitation la plus courante en construction (poutres de bâtiment, arbres qui portent des charges).</p>
+      <div class="formula-box">$$\sigma(y) = \dfrac{M_f\, y}{I}, \qquad E\,I\,y'' = -M_f$$</div>
+    </div>
+
+    <div class="sec" id="r-composees">
+      <h2><span class="h2-no">3.4</span>Sollicitations composées</h2>
+      <p>Dans la réalité, une pièce subit rarement une seule sollicitation isolée : un arbre de transmission, par exemple, est souvent en flexion (à cause de son propre poids et des efforts d'engrenage) <em>et</em> en torsion (à cause du couple transmis) en même temps. On parle alors de flexion déviée, flexion + traction, ou flexion + torsion.</p>
+      <p>Pour vérifier la tenue du matériau dans ce cas, on ne peut plus comparer une seule contrainte à $R_e$ : on utilise un <strong>critère de résistance</strong> (Tresca ou Von Mises) qui combine mathématiquement toutes les contraintes présentes en un seul nombre, comparé ensuite à la limite d'élasticité $R_e$ du matériau choisi (vue dans le module Matériaux).</p>
+      <p>Pour calculer les déplacements d'une structure, ou résoudre les cas hyperstatiques (voir ci-dessous), on utilise des méthodes énergétiques : théorème de Castigliano, théorème de Maxwell-Betti, ou méthode des travaux virtuels.</p>
+    </div>
+
+    <div class="sec" id="r-flambement">
+      <h2><span class="h2-no">3.5</span>Flambement et hyperstaticité</h2>
+      <h3>Le flambement</h3>
+      <p>Une poutre longue et fine, comprimée dans le sens de sa longueur (comme la règle du canne pliante), ne casse pas forcément parce que le matériau atteint sa limite de résistance — elle peut plier brutalement sur le côté bien avant, à cause d'une instabilité géométrique. C'est le flambement, et la charge à partir de laquelle il se produit est donnée par la formule d'Euler :</p>
+      <div class="formula-box">$$F_{cr} = \dfrac{\pi^2\,E\,I}{L_f^2}$$</div>
+      <p>La longueur de flambement $L_f$ dépend de la façon dont les extrémités de la poutre sont maintenues (encastrée-libre, rotule-rotule...) : une même poutre peut flamber plus ou moins facilement selon la façon dont elle est fixée à ses deux bouts.</p>
+      <h3>L'hyperstaticité</h3>
+      <p>Un système est dit hyperstatique quand il y a plus d'inconnues (réactions d'appuis, efforts internes) que d'équations d'équilibre disponibles pour les calculer — un peu comme une table à quatre pieds parfaitement rigides posée sur un sol irrégulier : on ne peut pas déterminer simplement la charge portée par chaque pied avec les seules équations d'équilibre statique. Il faut alors ajouter des équations supplémentaires, dites de compatibilité des déplacements, obtenues justement grâce aux méthodes énergétiques vues plus haut (méthode des forces, Castigliano).</p>
+    </div>
+
+
+    <div class="sec rdm-sim" id="r-simulateur">
+      <h2><span class="h2-no">3.6</span>Simulateur RDM — poutre chargée</h2>
+      <p>Un outil pédagogique pour passer des données de la poutre aux grandeurs de RDM. Choisis la géométrie, le matériau, les appuis et les charges : le site estime les réactions, les contraintes, le moment maximal et la flèche maximale.</p>
+      <div class="sim-grid">
+        <div class="sim-panel">
+          <h3>1. Données de la poutre</h3>
+          <div class="sim-form">
+            <div class="sim-field"><label for="sim-support">Type d'appuis</label><select id="sim-support"><option value="simply">Deux appuis simples — rotule + appui</option><option value="cantilever">Console — encastrée + libre</option></select></div>
+            <div class="sim-field"><label for="sim-material">Matériau</label><select id="sim-material"><option value="steel">Acier — E = 210 GPa, Re = 250 MPa</option><option value="aluminium">Aluminium — E = 70 GPa, Re = 150 MPa</option><option value="concrete">Béton — E = 30 GPa, Re = 25 MPa</option><option value="custom">Autre / valeur personnalisée</option></select></div>
+            <div class="sim-two">
+              <div class="sim-field"><label for="sim-length">Longueur L (m)</label><input id="sim-length" type="number" min="0.1" step="0.1" value="4"></div>
+              <div class="sim-field"><label for="sim-load">Charge ponctuelle F (N)</label><input id="sim-load" type="number" min="0" step="10" value="1000"></div>
+            </div>
+            <div class="sim-two">
+              <div class="sim-field"><label for="sim-position">Position F, x (m)</label><input id="sim-position" type="number" min="0" step="0.1" value="2"></div>
+              <div class="sim-field"><label for="sim-q">Charge répartie q (N/m)</label><input id="sim-q" type="number" min="0" step="10" value="0"></div>
+            </div>
+            <div class="sim-field"><label for="sim-section">Section</label><select id="sim-section"><option value="rect">Rectangle</option><option value="circle">Cercle plein</option></select></div>
+            <div class="sim-two" id="sim-rect-fields">
+              <div class="sim-field"><label for="sim-b">Largeur b (mm)</label><input id="sim-b" type="number" min="1" step="1" value="60"></div>
+              <div class="sim-field"><label for="sim-h">Hauteur h (mm)</label><input id="sim-h" type="number" min="1" step="1" value="100"></div>
+            </div>
+            <div class="sim-field" id="sim-d-field" style="display:none"><label for="sim-d">Diamètre d (mm)</label><input id="sim-d" type="number" min="1" step="1" value="80"></div>
+            <div id="sim-custom-material" style="display:none">
+              <div class="sim-two">
+                <div class="sim-field"><label for="sim-E">Module E (GPa)</label><input id="sim-E" type="number" min="0.1" step="1" value="210"></div>
+                <div class="sim-field"><label for="sim-Re">Limite Re (MPa)</label><input id="sim-Re" type="number" min="0.1" step="1" value="250"></div>
+              </div>
+            </div>
+            <div class="sim-help">Convention : F est dirigée vers le bas et q est uniforme sur toute la longueur. Pour une première utilisation, garde les valeurs proposées.</div>
+            <div class="sim-actions"><button class="sim-btn" id="sim-calc">Calculer</button><button class="sim-btn secondary" id="sim-reset" type="button">Réinitialiser</button></div>
+            <div class="sim-error" id="sim-error"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="sim-results">
+            <h3>2. Résultats</h3>
+            <div class="sim-kpis">
+              <div class="sim-kpi"><span>Moment max</span><strong id="sim-mmax">—</strong></div>
+              <div class="sim-kpi"><span>Flèche max</span><strong id="sim-vmax">—</strong></div>
+              <div class="sim-kpi"><span>Contrainte max</span><strong id="sim-smax">—</strong></div>
+              <div class="sim-kpi"><span>Coefficient Re/σ</span><strong id="sim-safety">—</strong></div>
+            </div>
+            <table class="sim-table">
+              <tbody>
+                <tr><th>Réaction gauche / encastrement</th><td id="sim-r1">—</td></tr>
+                <tr><th>Réaction droite</th><td id="sim-r2">—</td></tr>
+                <tr><th>Effort tranchant max</th><td id="sim-tmax">—</td></tr>
+                <tr><th>Moment quadratique I</th><td id="sim-I">—</td></tr>
+                <tr><th>Module de Young E</th><td id="sim-Eout">—</td></tr>
+              </tbody>
+            </table>
+            <div class="sim-status" id="sim-status">Lance un calcul pour obtenir une vérification pédagogique.</div>
+            <div class="sim-note">Modèle volontairement simplifié : poutre d'Euler-Bernoulli, petites déformations, matériau homogène/isotrope, flexion plane et superposition linéaire. La contrainte affichée est une contrainte normale de flexion ; ce module ne remplace pas un calcul de dimensionnement industriel.</div>
+          </div>
+          <div class="sim-graph">
+            <h3>Schéma de la poutre et déformée qualitative</h3>
+            <div id="sim-svg"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sim-case-grid">
+        <div class="sim-case"><h3>Cas 1 — Poutre légère</h3><p>Compare une poutre en aluminium et une poutre en acier à géométrie identique.</p><button class="sim-btn secondary" data-simcase="light">Charger le cas</button></div>
+        <div class="sim-case"><h3>Cas 2 — Charge répartie</h3><p>Observe l'influence d'une charge uniforme sur le moment et la flèche.</p><button class="sim-btn secondary" data-simcase="distributed">Charger le cas</button></div>
+        <div class="sim-case"><h3>Cas 3 — Console</h3><p>Découvre la différence entre une poutre sur deux appuis et une poutre encastrée-libre.</p><button class="sim-btn secondary" data-simcase="cantilever">Charger le cas</button></div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ================= QUIZ ================= -->
+  <section class="page" id="page-quiz">
+    <div class="page-head">
+      <div class="kicker">04 — Quiz</div>
+      <h1>Quiz de vérification</h1>
+      <p>Une banque de questions par thème, en cours d'enrichissement, correction et explication immédiates.</p>
+    </div>
+    <div class="quiz-picker" id="quiz-picker"></div>
+    <div id="quiz-area"></div>
+  </section>
+
+  <!-- ================= À PROPOS ================= -->
+  <section class="page" id="page-apropos">
+    <div class="page-head">
+      <div class="kicker">05 — À propos</div>
+      <h1>Qui a créé ce site ?</h1>
+    </div>
+    <div class="sec">
+      <p>Ce site est conçu et rédigé par l'élève ingénieur <strong>AGOKOU Edem Elie</strong> et ses collaborateurs, pour aider les nouveaux élèves ingénieurs à consolider leurs bases sur les questions de matériaux, de RDM et de technologie mécanique — des notions souvent abordées rapidement en cours, mais qui gagnent à être vues une première fois avant la rentrée.</p>
+      <p>Le contenu de ce site est un <strong>résumé pédagogique</strong> : il rassemble et reformule des notions déjà enseignées dans les cursus de génie mécanique, dans un format plus visuel et interactif (fiches courtes, schémas, quiz), sans prétendre remplacer un cours complet ni les ouvrages de référence.</p>
+      <div class="note">Le contenu continue d'être enrichi (nouvelles questions de quiz, nouveaux schémas). Une remarque, une erreur repérée ou une suggestion ? N'hésite pas à en parler autour de toi pour qu'elle remonte jusqu'aux auteurs.</div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* ---------------- gear teeth generator ---------------- */
+function buildTeeth(id){
+  const g = document.getElementById(id);
+  if(!g) return;
+  const cx=60, cy=60, n=8;
+  let html='';
+  for(let i=0;i<n;i++){
+    const a = (360/n)*i;
+    html += `<rect x="52" y="6" width="16" height="14" transform="rotate(${a} 60 60)"/>`;
+  }
+  g.innerHTML = html;
+}
+buildTeeth('teeth'); buildTeeth('teeth2');
+
+/* ---------------- graceful fallback for not-yet-added real photos ---------------- */
+document.querySelectorAll('.photo-box img').forEach(img=>{
+  img.addEventListener('error', ()=>{
+    img.closest('.photo-box').style.display = 'none';
+  });
+});
+
+/* ---------------- hamburger drawer ---------------- */
+const drawerOverlay = document.getElementById('drawer-overlay');
+function openDrawer(){ drawerOverlay.classList.add('open'); }
+function closeDrawer(){ drawerOverlay.classList.remove('open'); }
+document.getElementById('burger-btn').addEventListener('click', openDrawer);
+document.getElementById('drawer-close').addEventListener('click', closeDrawer);
+drawerOverlay.addEventListener('click', (e)=>{ if(e.target===drawerOverlay) closeDrawer(); });
+
+/* ---------------- routing ---------------- */
+const pages = ['accueil','materiaux','techno','rdm','quiz','apropos'];
+
+function showSection(pageEl, anchorId){
+  const secs = pageEl.querySelectorAll(':scope > .sec');
+  if(secs.length === 0) return;
+  let target = anchorId ? pageEl.querySelector('#'+anchorId) : null;
+  if(!target) target = secs[0];
+  secs.forEach(s=>s.classList.toggle('active', s===target));
+  pageEl.querySelectorAll('.subnav button').forEach(b=>{
+    b.classList.toggle('on', b.dataset.anchor === target.id);
+  });
+}
+
+function goTo(pageId, anchor){
+  pages.forEach(p=>{
+    document.getElementById('page-'+p).classList.toggle('active', p===pageId);
+  });
+  const pageEl = document.getElementById('page-'+pageId);
+  showSection(pageEl, anchor);
+  window.location.hash = anchor ? (pageId+'/'+anchor) : pageId;
+  window.scrollTo({top:0, behavior:'instant'});
+}
+document.querySelectorAll('[data-page]').forEach(el=>{
+  el.addEventListener('click', ()=>{
+    goTo(el.dataset.page, el.dataset.anchor);
+    closeDrawer();
+  });
+});
+document.querySelectorAll('.subnav button').forEach(b=>{
+  b.addEventListener('click', ()=>{
+    const pageEl = b.closest('.page');
+    showSection(pageEl, b.dataset.anchor);
+    window.location.hash = pageEl.id.replace('page-','') + '/' + b.dataset.anchor;
+    window.scrollTo({top:0, behavior:'instant'});
+  });
+});
+const initRaw = (window.location.hash||'#accueil').replace('#','');
+const [initPage, initAnchor] = initRaw.split('/');
+goTo(pages.includes(initPage)?initPage:'accueil', initAnchor);
+
+/* ---------------- KaTeX ---------------- */
+window.addEventListener('load', function(){
+  if (window.renderMathInElement){
+    renderMathInElement(document.body, {
+      delimiters: [
+        {left:"$$", right:"$$", display:true},
+        {left:"$", right:"$", display:false}
+      ]
+    });
+  }
+});
+
+/* ---------------- quiz data ---------------- */
+const QUIZZES = {
+  materiaux: {
+    label: "Matériaux",
+    questions: [
+      {q:"Le module de Young E caractérise :",
+       options:["la dureté superficielle","la raideur du matériau dans le domaine élastique","la résistance à la fatigue","la masse volumique"],
+       correct:1, explain:"E relie contrainte et déformation dans le domaine élastique : σ = E·ε. Plus E est grand, plus le matériau est raide."},
+      {q:"Quel essai permet de déterminer Re, Rm et A% ?",
+       options:["l'essai de dureté Brinell","l'essai de résilience Charpy","l'essai de traction","l'essai de fatigue"],
+       correct:2, explain:"L'essai de traction donne la courbe contrainte-déformation dont on extrait Re (limite élastique), Rm (résistance max) et A% (allongement à rupture)."},
+      {q:"La trempe suivie d'un revenu sert à :",
+       options:["ramollir totalement la pièce","durcir puis redonner de la ténacité","augmenter le volume de la pièce","supprimer le carbone de l'acier"],
+       correct:1, explain:"La trempe durcit mais fragilise ; le revenu qui suit redonne de la ténacité en réduisant légèrement la dureté obtenue."},
+      {q:"Un matériau composite associe :",
+       options:["deux métaux ferreux","une matrice et un renfort","un polymère seul","deux céramiques identiques"],
+       correct:1, explain:"Un composite combine une matrice (souvent polymère) et un renfort (fibres de verre ou de carbone) pour allier légèreté et résistance."},
+      {q:"La résilience mesure surtout :",
+       options:["la résistance à la corrosion","la capacité à absorber de l'énergie avant rupture","la conductivité thermique","le point de fusion"],
+       correct:1, explain:"La résilience (essai Charpy) évalue la capacité du matériau à encaisser un choc sans rompre de façon fragile."},
+      {q:"Les aciers et les fontes appartiennent à la famille des :",
+       options:["métaux non ferreux","polymères","métaux ferreux","céramiques"],
+       correct:2, explain:"Les métaux ferreux sont les alliages à base de fer : aciers (fer-carbone) et fontes (plus riches en carbone)."},
+      {q:"Un avantage typique des métaux non ferreux (aluminium, titane) par rapport aux aciers est :",
+       options:["une masse volumique plus faible","une dureté toujours supérieure","un coût toujours inférieur","une conductivité électrique nulle"],
+       correct:0, explain:"Les métaux non ferreux comme l'aluminium sont souvent choisis pour leur légèreté (masse volumique plus faible) et leur bonne résistance à la corrosion."},
+      {q:"Une céramique technique se distingue généralement par :",
+       options:["une grande ténacité et une bonne ductilité","une dureté élevée mais une fragilité importante","une faible résistance à la chaleur","une conductivité électrique très élevée"],
+       correct:1, explain:"Les céramiques résistent bien à la chaleur et sont très dures, mais cassent de façon fragile (faible ténacité) plutôt que de se déformer."},
+      {q:"La dureté d'un matériau mesure :",
+       options:["sa résistance à la pénétration d'un indenteur","sa capacité à revenir à sa forme initiale","sa résistance à la corrosion","sa masse par unité de volume"],
+       correct:0, explain:"La dureté quantifie la résistance superficielle d'un matériau face à la pénétration d'un indenteur (bille, pyramide, cône selon l'essai)."},
+      {q:"Parmi les essais de dureté suivants, lequel utilise un indenteur en forme de pyramide en diamant ?",
+       options:["Brinell","Vickers","Rockwell","Charpy"],
+       correct:1, explain:"L'essai Vickers utilise une pyramide en diamant à base carrée ; Brinell utilise une bille, Rockwell un cône ou une bille, et Charpy n'est pas un essai de dureté mais de résilience."},
+      {q:"La ténacité d'un matériau caractérise :",
+       options:["sa résistance à la propagation d'une fissure","sa masse volumique","sa conductivité thermique","son point de fusion"],
+       correct:0, explain:"La ténacité mesure la capacité d'un matériau à résister à la propagation d'une fissure déjà présente, ce qui est essentiel pour éviter une rupture brutale."},
+      {q:"La limite d'endurance d'un matériau est liée à :",
+       options:["la résistance en traction statique","la résistance à la fatigue sous chargement cyclique","la résistance à la corrosion","la dureté de surface"],
+       correct:1, explain:"La limite d'endurance est la contrainte cyclique en dessous de laquelle une pièce peut, en théorie, subir un nombre infini de cycles sans rompre par fatigue."},
+      {q:"Le recuit d'un matériau a pour objectif principal de :",
+       options:["augmenter fortement la dureté","réduire les contraintes internes et adoucir le matériau","enrichir la surface en carbone","fondre complètement la pièce"],
+       correct:1, explain:"Le recuit consiste en un chauffage suivi d'un refroidissement lent, ce qui relâche les contraintes internes et adoucit le matériau."},
+      {q:"La cémentation consiste à :",
+       options:["refroidir brutalement une pièce chauffée","enrichir la surface d'une pièce en carbone pour la durcir","fondre un alliage","mesurer la dureté d'une pièce"],
+       correct:1, explain:"La cémentation enrichit la couche superficielle en carbone, ce qui permet de durcir la surface tout en gardant un cœur plus ductile."},
+      {q:"Dans le choix d'un matériau pour une pièce aéronautique, le critère souvent le plus décisif est :",
+       options:["le rapport résistance/masse","la couleur du matériau","le prix le plus bas possible sans autre critère","la conductivité électrique uniquement"],
+       correct:0, explain:"En aéronautique, alléger une pièce tout en gardant une résistance suffisante (rapport résistance/masse élevé) est souvent le critère prioritaire."},
+      {q:"Une éprouvette de traction normalisée sert à :",
+       options:["mesurer uniquement la masse volumique du matériau","obtenir une courbe contrainte-déformation reproductible","mesurer la conductivité thermique","tester la résistance à la corrosion"],
+       correct:1, explain:"La forme normalisée de l'éprouvette permet d'obtenir des résultats comparables d'un laboratoire à l'autre, à partir de la courbe contrainte-déformation."},
+      {q:"Un allongement à la rupture A% élevé signifie que le matériau est plutôt :",
+       options:["fragile","ductile","très dur","non métallique obligatoirement"],
+       correct:1, explain:"Un allongement à la rupture élevé indique une bonne capacité à se déformer plastiquement avant de rompre : c'est la signature d'un comportement ductile."},
+      {q:"Le principal risque d'une trempe trop sévère sur une pièce en acier est :",
+       options:["une perte totale de dureté","l'apparition de fissures de trempe (fragilisation)","une diminution du point de fusion","une augmentation de la ductilité"],
+       correct:1, explain:"Une trempe trop rapide/sévère peut générer des contraintes internes importantes et fragiliser la pièce, voire créer des fissures — d'où l'intérêt du revenu qui suit."},
+      {q:"Un polymère thermoplastique se distingue d'un thermodurcissable par le fait qu'il :",
+       options:["peut être refondu et remis en forme par chauffage","durcit définitivement après une seule cuisson","est toujours plus résistant qu'un métal","ne peut jamais être recyclé"],
+       correct:0, explain:"Un thermoplastique ramollit à la chaleur et peut être refondu/reformé, contrairement à un thermodurcissable qui, une fois polymérisé, ne peut plus être refondu."},
+      {q:"Pour une pièce soumise à un environnement humide et salin, un critère de choix important sera :",
+       options:["la résistance à la corrosion","la couleur du matériau","la conductivité électrique uniquement","le point de fusion uniquement"],
+       correct:0, explain:"Dans un environnement humide/salin, la résistance à la corrosion devient un critère de choix central, parfois plus important que la résistance mécanique pure."},
+      {q:"La courbe de Wöhler (courbe S-N) sert principalement à :",
+       options:["représenter la dureté en fonction de la température","relier la contrainte cyclique appliquée au nombre de cycles avant rupture par fatigue","donner le point de fusion d'un alliage","comparer deux essais de traction"],
+       correct:1, explain:"La courbe de Wöhler trace la contrainte cyclique en fonction du nombre de cycles à rupture ; elle permet de lire la limite d'endurance du matériau."},
+      {q:"Le fluage (creep) d'un matériau désigne :",
+       options:["une rupture instantanée sous choc","une déformation lente et progressive sous une charge constante, souvent à chaud","une augmentation soudaine de la dureté","un changement de couleur en surface"],
+       correct:1, explain:"Le fluage est une déformation qui s'accumule lentement dans le temps sous une charge constante, en particulier à haute température — un enjeu important pour les pièces de turbine par exemple."},
+      {q:"Un alliage est :",
+       options:["un métal pur à 100%","un mélange d'au moins deux éléments, dont au moins un métal","toujours un polymère","un matériau obligatoirement fragile"],
+       correct:1, explain:"Un alliage résulte du mélange d'un métal avec un ou plusieurs autres éléments (métalliques ou non), ce qui permet d'ajuster ses propriétés par rapport au métal pur."},
+      {q:"L'acier inoxydable doit sa résistance à la corrosion principalement à :",
+       options:["sa teneur en carbone élevée","l'ajout de chrome, qui forme une fine couche protectrice d'oxyde en surface","sa dureté très élevée","l'absence totale de fer dans sa composition"],
+       correct:1, explain:"Le chrome ajouté à l'acier forme une couche d'oxyde de chrome invisible et auto-régénérante qui protège le métal en dessous de la corrosion."},
+      {q:"Un matériau dit 'anisotrope' se caractérise par :",
+       options:["des propriétés identiques dans toutes les directions","des propriétés qui varient selon la direction considérée","une dureté nulle","une masse volumique infinie"],
+       correct:1, explain:"L'anisotropie signifie que les propriétés mécaniques changent selon la direction — c'est typiquement le cas d'un composite à fibres orientées, contrairement à un métal isotrope classique."},
+      {q:"Dans un composite à fibres, la matrice a principalement pour rôle de :",
+       options:["apporter l'essentiel de la résistance mécanique","transmettre les efforts aux fibres et les protéger","augmenter la dureté de surface uniquement","remplacer totalement les fibres si besoin"],
+       correct:1, explain:"Dans un composite, ce sont surtout les fibres (le renfort) qui apportent la résistance ; la matrice répartit les efforts entre les fibres et les protège de l'environnement extérieur."},
+      {q:"La zircone et l'alumine sont des exemples typiques de :",
+       options:["polymères thermoplastiques","céramiques techniques","alliages d'aluminium","élastomères"],
+       correct:1, explain:"La zircone et l'alumine sont des céramiques techniques, utilisées pour leur dureté et leur résistance à la chaleur (outils de coupe, prothèses, isolants)."},
+      {q:"Un élastomère comme le caoutchouc se distingue par :",
+       options:["une capacité à se déformer énormément puis à revenir à sa forme initiale","une dureté supérieure à celle de l'acier","une absence totale d'élasticité","un point de fusion supérieur à celui des céramiques"],
+       correct:0, explain:"Les élastomères peuvent subir de très grandes déformations réversibles, contrairement aux métaux qui restent dans un domaine élastique beaucoup plus limité."},
+      {q:"La corrosion galvanique se produit typiquement quand :",
+       options:["deux métaux différents sont en contact électrique en présence d'humidité","un matériau est chauffé au four","une pièce est trempée dans l'huile","un polymère est exposé au soleil"],
+       correct:0, explain:"Le contact entre deux métaux de nature différente, en présence d'un électrolyte (eau, humidité), crée une pile qui accélère la corrosion du métal le moins noble."},
+      {q:"Le grain d'un métal, visible en microscopie, correspond à :",
+       options:["une bulle d'air piégée dans la pièce","une zone cristalline homogène délimitée par des joints de grain","un défaut de fabrication toujours néfaste","une trace de peinture"],
+       correct:1, explain:"Un métal est constitué de nombreux petits cristaux appelés grains ; la taille de ces grains influence directement les propriétés mécaniques (des grains plus fins donnent souvent un matériau plus résistant)."},
+      {q:"Réduire la taille des grains d'un métal a généralement pour effet de :",
+       options:["diminuer sa résistance mécanique","augmenter sa résistance mécanique","le rendre transparent","annuler sa masse volumique"],
+       correct:1, explain:"Des grains plus petits créent davantage de joints de grains, qui freinent le déplacement des dislocations internes, ce qui augmente en général la résistance du matériau (loi de Hall-Petch)."},
+      {q:"Un polymère renforcé de fibres courtes, comparé à un polymère non renforcé, présente généralement :",
+       options:["une résistance mécanique plus faible","une résistance mécanique améliorée, au prix d'une fabrication parfois plus complexe","une transparence totale garantie","aucune différence de propriétés"],
+       correct:1, explain:"L'ajout de fibres (verre, carbone) dans un polymère améliore nettement sa résistance et sa rigidité, ce qui explique leur usage croissant en remplacement de certaines pièces métalliques."},
+      {q:"Une pièce fabriquée par moulage (fonderie), comparée à une pièce forgée, a souvent :",
+       options:["une structure interne plus fine et plus résistante","une structure interne plus grossière, avec un risque de porosités","exactement les mêmes propriétés mécaniques dans tous les cas","une résistance à la corrosion automatiquement meilleure"],
+       correct:1, explain:"Le moulage peut introduire des porosités et une structure de grain plus grossière ; le forgeage, en déformant la matière, affine généralement la structure et améliore la résistance."},
+      {q:"Le principal inconvénient des matériaux composites à fibres de carbone, comparés à l'acier, est souvent :",
+       options:["leur masse volumique trop élevée","leur coût de fabrication plus important et leur réparation plus délicate","leur résistance mécanique trop faible","leur incapacité totale à être moulés"],
+       correct:1, explain:"Les composites carbone sont légers et résistants, mais restent coûteux à produire et plus difficiles à réparer ou à recycler qu'un acier classique."}
+    ]
+  },
+  techno: {
+    label: "Technologie mécanique",
+    questions: [
+      {q:"Une liaison pivot autorise :",
+       options:["une translation seulement","une rotation seulement","trois rotations","aucun mouvement"],
+       correct:1, explain:"La liaison pivot laisse une seule rotation libre autour de l'axe de la liaison, et bloque les translations."},
+      {q:"Le rapport de transmission d'un engrenage se calcule par :",
+       options:["r = Z1/Z2","r = Z1·Z2","r = Z1+Z2","r = Z2-Z1"],
+       correct:0, explain:"r = ω2/ω1 = Z1/Z2 : le rapport dépend uniquement du nombre de dents de chaque roue."},
+      {q:"Pour transmettre un couple élevé sans glissement, on choisit plutôt :",
+       options:["une transmission par courroie plate","une transmission par chaîne","un accouplement élastique seul","un simple frottement de contact"],
+       correct:1, explain:"La chaîne transmet sans glissement, contrairement à la courroie qui peut glisser sous forte charge."},
+      {q:"La puissance transmise par un arbre en rotation s'écrit :",
+       options:["P = F/v","P = C·ω","P = m·g·h","P = σ·S"],
+       correct:1, explain:"P = C·ω : la puissance est le produit du couple transmis par la vitesse angulaire de l'arbre."},
+      {q:"Pour des charges élevées avec un contact linéique plutôt que ponctuel, on utilise plutôt :",
+       options:["un roulement à billes","un roulement à rouleaux","un coussinet en bronze seul","aucun guidage"],
+       correct:1, explain:"Le contact linéique des rouleaux répartit mieux les charges élevées que le contact ponctuel des billes."},
+      {q:"Une liaison encastrement autorise :",
+       options:["aucun mouvement relatif entre les deux pièces","une rotation libre","une translation libre","trois rotations libres"],
+       correct:0, explain:"L'encastrement bloque tous les degrés de liberté : ni translation, ni rotation relative entre les deux pièces."},
+      {q:"Une liaison rotule (sphérique) autorise :",
+       options:["0 translation et 0 rotation","1 translation et 1 rotation","0 translation et 3 rotations","3 translations et 0 rotation"],
+       correct:2, explain:"La rotule bloque les translations mais laisse les trois rotations libres, comme une articulation de type bille-cuvette."},
+      {q:"Un engrenage à dents hélicoïdales, par rapport à un engrenage droit, est surtout choisi pour :",
+       options:["être plus bruyant","un engagement plus progressif et plus silencieux","transmettre uniquement des faibles vitesses","changer la direction de l'arbre de 90°"],
+       correct:1, explain:"Les dents inclinées des engrenages hélicoïdaux entrent en contact progressivement, ce qui réduit le bruit et les chocs par rapport aux dents droites."},
+      {q:"Un engrenage conique est utilisé principalement pour :",
+       options:["augmenter uniquement le rendement","changer la direction de transmission entre deux arbres concourants","remplacer un roulement","éviter tout glissement dans une courroie"],
+       correct:1, explain:"Les engrenages coniques permettent de transmettre un mouvement entre deux arbres dont les axes se croisent (souvent à 90°)."},
+      {q:"Deux roues dentées destinées à engrener ensemble doivent obligatoirement avoir :",
+       options:["le même nombre de dents","le même module","la même couleur de traitement","le même diamètre extérieur"],
+       correct:1, explain:"Le module fixe la taille des dents ; deux roues engrenées doivent avoir le même module, mais peuvent avoir un nombre de dents différent (c'est même ce qui crée le rapport de transmission)."},
+      {q:"Une transmission par courroie plate, comparée à une transmission par chaîne, présente surtout :",
+       options:["un risque de glissement sous forte charge","une transmission totalement sans glissement","une capacité à transmettre un couple plus élevé","un besoin de lubrification obligatoire"],
+       correct:0, explain:"La courroie fonctionne par adhérence : elle peut glisser sous forte charge, contrairement à la chaîne qui transmet par obstacle (sans glissement)."},
+      {q:"Un accouplement élastique entre deux arbres sert notamment à :",
+       options:["empêcher toute rotation","tolérer un léger défaut d'alignement entre les deux arbres","remplacer un roulement à billes","augmenter le rapport de transmission"],
+       correct:1, explain:"Un accouplement élastique (à soufflet, à mâchoires...) absorbe les petits défauts d'alignement entre deux arbres, contrairement à un accouplement rigide."},
+      {q:"Un roulement à billes est plutôt adapté à :",
+       options:["des charges très élevées avec contact linéique","des charges modérées avec de faibles frottements","l'absence totale de rotation","le remplacement systématique des coussinets, quel que soit le cas"],
+       correct:1, explain:"Le contact ponctuel des billes limite la charge admissible par rapport aux rouleaux, mais offre de faibles frottements, adapté aux charges modérées à vitesse élevée."},
+      {q:"Un coussinet (palier lisse), comparé à un roulement, est généralement choisi pour :",
+       options:["les très hautes vitesses uniquement","une solution simple et économique à faible vitesse","éliminer tout besoin de lubrification","les charges les plus élevées uniquement"],
+       correct:1, explain:"Le coussinet est une solution simple et peu coûteuse, souvent utilisée à faible vitesse, mais nécessitant en général une lubrification pour limiter le frottement direct."},
+      {q:"Dans un assemblage boulonné, la précontrainte de serrage sert principalement à :",
+       options:["décorer la pièce","empêcher le glissement ou la séparation des pièces sous charge","remplacer la soudure dans tous les cas","augmenter la masse de l'assemblage"],
+       correct:1, explain:"La précontrainte, liée au couple de serrage, maintient les pièces plaquées l'une contre l'autre afin d'éviter le glissement ou la séparation sous l'effort de service."},
+      {q:"Dans un assemblage riveté, on vérifie typiquement :",
+       options:["le cisaillement du rivet et la pression de matage sur les tôles","uniquement la couleur du rivet","la conductivité thermique du rivet","le point de fusion du rivet"],
+       correct:0, explain:"Un assemblage riveté doit résister au cisaillement dans le rivet et à l'écrasement local (matage) des tôles assemblées autour du trou."},
+      {q:"Un assemblage soudé se vérifie principalement en comparant :",
+       options:["la couleur du cordon à une norme esthétique","la contrainte dans le cordon à la limite admissible du métal d'apport","le diamètre du cordon à celui d'un boulon standard","la dureté du cordon à celle d'un roulement"],
+       correct:1, explain:"On compare la contrainte réellement supportée par le cordon de soudure à la contrainte admissible du métal d'apport utilisé."},
+      {q:"Un assemblage par frettage ou collage transmet l'effort principalement par :",
+       options:["un perçage traversant","la surface de contact entre les pièces","un cordon de soudure","un roulement intégré"],
+       correct:1, explain:"Contrairement au boulonnage ou au rivetage, le frettage et le collage transmettent l'effort par la surface de contact, sans perçage."},
+      {q:"Le principe général de vérification d'un assemblage mécanique consiste à :",
+       options:["comparer la contrainte transmise à la limite admissible du matériau","mesurer uniquement la masse de l'assemblage","vérifier seulement l'aspect visuel","ignorer le type d'effort transmis"],
+       correct:0, explain:"Quel que soit le type d'assemblage (boulonné, soudé, riveté, par adhérence), la logique reste la même : identifier l'effort transmis, définir la section ou surface qui le reprend, et comparer la contrainte obtenue à la limite admissible du matériau."},
+      {q:"La différence essentielle entre une vis et un boulon est que :",
+       options:["la vis se visse directement dans un trou taraudé de la pièce, le boulon nécessite un écrou séparé","le boulon n'a jamais de tête","la vis est toujours plus grosse qu'un boulon","il n'existe aucune différence"],
+       correct:0, explain:"Une vis se visse directement dans la pièce taraudée ; un boulon est l'ensemble vis + écrou séparé, utilisé quand la pièce ne peut pas être taraudée."},
+      {q:"Un goujon se caractérise par :",
+       options:["une tête à une extrémité et un écrou à l'autre","une tige filetée aux deux extrémités, sans tête","l'absence totale de filetage","une forme uniquement conique"],
+       correct:1, explain:"Le goujon est fileté à ses deux extrémités : un côté se visse dans la pièce, l'autre reçoit un écrou."},
+      {q:"Le rôle principal d'une rondelle élastique (grower) est de :",
+       options:["décorer l'assemblage","limiter le risque de desserrage spontané sous vibrations","remplacer complètement l'écrou","augmenter le diamètre de la vis"],
+       correct:1, explain:"La rondelle élastique se comprime légèrement au serrage et exerce un effort de rappel permanent, ce qui réduit le risque de desserrage sous vibrations."},
+      {q:"Une rondelle plate sert avant tout à :",
+       options:["répartir la pression de serrage sur une surface plus large","empêcher toute rotation de la vis","augmenter le couple de serrage nécessaire","remplacer la clavette"],
+       correct:0, explain:"En répartissant la pression sous la tête de vis (ou l'écrou) sur une surface plus large, la rondelle plate évite d'enfoncer ou d'abîmer une pièce plus tendre."},
+      {q:"Par rapport à une clavette unique, les cannelures présentent l'avantage de :",
+       options:["répartir l'effort sur toute la circonférence de l'arbre, adapté aux couples élevés","être plus simples à fabriquer dans tous les cas","ne nécessiter aucun contact entre l'arbre et le moyeu","supprimer totalement le besoin de lubrification"],
+       correct:0, explain:"Les cannelures multiplient les zones de contact tout autour de l'arbre, répartissant mieux l'effort qu'une seule clavette, ce qui les rend adaptées aux couples élevés (boîtes de vitesses, transmissions automobiles)."},
+      {q:"Le diamètre nominal d'une vis (par exemple M8) correspond à :",
+       options:["la longueur totale de la vis","le diamètre extérieur du filetage","la distance entre deux têtes de vis","le diamètre de la tête uniquement"],
+       correct:1, explain:"La désignation M8 indique un diamètre extérieur de filetage de 8 mm ; la longueur de la vis est précisée séparément."},
+      {q:"Le pas d'une vis désigne :",
+       options:["l'angle de la tête de vis","la distance entre deux filets consécutifs","le diamètre de la tige","le nombre de tours nécessaires pour la dévisser complètement"],
+       correct:1, explain:"Le pas est la distance entre deux filets successifs ; il détermine de combien la vis avance axialement à chaque tour complet."},
+      {q:"Une clavette est normalement dimensionnée de la façon suivante :",
+       options:["sa largeur et sa hauteur sont normalisées selon le diamètre de l'arbre, seule sa longueur se calcule selon le couple à transmettre","toutes ses dimensions sont recalculées à chaque projet, sans table normalisée","elle n'a aucune dimension standard","son diamètre se calcule comme celui d'une vis"],
+       correct:0, explain:"Largeur et hauteur de clavette sont lues dans des tables normalisées en fonction du diamètre de l'arbre ; seule la longueur reste à ajuster selon le couple à transmettre."},
+      {q:"Dans un frettage, si le serrage diamétral est augmenté au-delà d'une certaine limite, le principal risque est :",
+       options:["une diminution du couple transmissible","la fissuration du moyeu, surtout s'il est en matériau fragile","une augmentation automatique de la masse volumique","aucun risque, on peut l'augmenter indéfiniment"],
+       correct:1, explain:"Un serrage trop important peut dépasser la limite d'élasticité (voire la résistance à la rupture) du moyeu et le fissurer, en particulier pour un matériau peu ductile comme une fonte."},
+      {q:"Pourquoi choisit-on parfois un accouplement élastique plutôt qu'un accouplement rigide entre deux arbres ?",
+       options:["pour tolérer un léger défaut d'alignement entre les deux arbres","pour empêcher totalement la rotation","pour supprimer le besoin de roulement","parce qu'il coûte toujours moins cher"],
+       correct:0, explain:"Un accouplement élastique absorbe les petits défauts d'alignement, évitant de solliciter excessivement les roulements des deux arbres reliés."},
+      {q:"En dimensionnement d'un assemblage vissé, si une seule vis ne suffit pas à empêcher le glissement sous l'effort de service, la solution la plus raisonnable est en général de :",
+       options:["répartir l'effort sur plusieurs vis plutôt que sur-dimensionner une seule vis","abandonner le projet","remplacer toutes les vis par des rivets sans autre vérification","ignorer le problème si la pièce paraît solide visuellement"],
+       correct:0, explain:"Répartir l'effort sur plusieurs vis de taille raisonnable est en général une solution plus efficace et plus robuste qu'une seule vis surdimensionnée."},
+      {q:"Le choix du procédé de soudage (arc, TIG, MIG...) dépend principalement de :",
+       options:["la couleur souhaitée du cordon","l'épaisseur des pièces et le type de métal à assembler","le nombre de rivets déjà utilisés sur la pièce","la vitesse de rotation d'un arbre voisin"],
+       correct:1, explain:"L'épaisseur des tôles et la nature du métal (acier, aluminium...) orientent le choix du procédé de soudage le plus adapté."},
+      {q:"Sur un vélo classique, la transmission par chaîne est préférée à une courroie plate principalement parce que :",
+       options:["la chaîne est toujours plus légère","la chaîne ne glisse pas, contrairement à une courroie plate sous forte charge","la chaîne ne nécessite aucun entretien","une courroie ne peut jamais relier deux poulies"],
+       correct:1, explain:"La chaîne s'imbrique dans les dents du pignon et ne glisse pas, ce qui est essentiel pour un pédalage efficace, notamment en montée."},
+      {q:"Dans un rivetage, augmenter le nombre de rivets plutôt que leur diamètre permet surtout de :",
+       options:["répartir l'effort sur plusieurs points de contact sans trop affaiblir localement la tôle à chaque trou","annuler tout risque de matage","supprimer le besoin de choisir un diamètre de rivet","remplacer entièrement l'assemblage par une soudure"],
+       correct:0, explain:"Percer plusieurs trous plus petits plutôt qu'un seul gros trou répartit l'effort et limite l'affaiblissement local de la tôle assemblée."}
+    ]
+  },
+  rdm: {
+    label: "RDM",
+    questions: [
+      {q:"L'hypothèse de Navier-Bernoulli suppose que :",
+       options:["les sections planes restent planes après déformation","le matériau est hétérogène","les déformations sont grandes","la poutre n'a pas de ligne moyenne"],
+       correct:0, explain:"C'est l'hypothèse centrale de la théorie des poutres : les sections droites restent planes après déformation."},
+      {q:"La contrainte normale en flexion, à une distance y de l'axe neutre, s'écrit :",
+       options:["σ = N/S","σ = Mf·y/I","σ = Mt·r/I0","τ = T/S"],
+       correct:1, explain:"σ(y) = Mf·y/I : la contrainte de flexion est proportionnelle au moment fléchissant et à la distance à l'axe neutre."},
+      {q:"La charge critique de flambement d'Euler dépend :",
+       options:["uniquement de la section","de E, de I et de la longueur de flambement","uniquement de la charge appliquée","de la contrainte de cisaillement seule"],
+       correct:1, explain:"Fcr = π²·E·I / Lf² : E, I et Lf (donc les conditions aux limites) déterminent la charge critique."},
+      {q:"Un système est dit hyperstatique lorsque :",
+       options:["il n'a aucune inconnue","le nombre d'inconnues dépasse le nombre d'équations d'équilibre disponibles","il est instable","toutes les forces sont connues"],
+       correct:1, explain:"L'hyperstaticité correspond à un excès d'inconnues par rapport aux équations d'équilibre disponibles ; il faut des équations de compatibilité en plus."},
+      {q:"Pour vérifier la tenue d'un arbre en flexion + torsion, on utilise :",
+       options:["l'essai de dureté","un critère de résistance comme Von Mises","le rapport de transmission d'engrenage","la loi de refroidissement"],
+       correct:1, explain:"Sous sollicitations composées, un critère comme Tresca ou Von Mises compare l'état de contrainte combiné à la limite d'élasticité Re du matériau."},
+      {q:"Une poutre, au sens de la RDM, est définie principalement par :",
+       options:["sa masse et sa couleur","sa ligne moyenne et sa section droite","son point de fusion","sa dureté de surface"],
+       correct:1, explain:"Une poutre est un solide élancé caractérisé par sa ligne moyenne (fibre neutre) et sa section droite, supposée constante ou peu variable."},
+      {q:"Le torseur de cohésion, obtenu par une coupure fictive dans une poutre, regroupe :",
+       options:["uniquement l'effort normal","effort normal, efforts tranchants, moment de torsion et moments fléchissants","uniquement la masse volumique","uniquement le module de Young"],
+       correct:1, explain:"Le torseur de cohésion réduit les efforts intérieurs en un point à : N (effort normal), Ty/Tz (efforts tranchants), Mt (moment de torsion) et Mfy/Mfz (moments fléchissants)."},
+      {q:"En traction/compression simple, la contrainte normale s'écrit :",
+       options:["σ = N/S","σ = T/S","σ = Mf·y/I","σ = Mt·r/I0"],
+       correct:0, explain:"En sollicitation de traction/compression pure, la contrainte normale σ est simplement l'effort normal N divisé par la section S."},
+      {q:"En cisaillement simple, la contrainte tangentielle s'écrit :",
+       options:["τ = N/S","τ = T/S","τ = Mf·y/I","τ = E·ε"],
+       correct:1, explain:"La contrainte de cisaillement moyenne τ est l'effort tranchant T divisé par la section S soumise au cisaillement."},
+      {q:"En torsion, l'angle unitaire de torsion θ' est donné par :",
+       options:["θ' = Mt/(G·I0)","θ' = N/S","θ' = Mf/(E·I)","θ' = T/S"],
+       correct:0, explain:"θ' = Mt/(G·I0) : l'angle de torsion par unité de longueur dépend du moment de torsion, du module de cisaillement G et du moment quadratique polaire I0."},
+      {q:"La relation entre le moment fléchissant et la déformée d'une poutre en flexion s'écrit :",
+       options:["E·I·y'' = -Mf","E·S·y' = N","G·I0·y = Mt","σ = E·ε"],
+       correct:0, explain:"C'est l'équation différentielle de la déformée en flexion : E·I·y'' = -Mf, qui permet, après intégration, d'obtenir la flèche de la poutre."},
+      {q:"Le théorème de Castigliano permet principalement de calculer :",
+       options:["un déplacement à partir de l'énergie de déformation","une masse volumique","une dureté","un rapport de transmission"],
+       correct:0, explain:"Le déplacement au point d'application d'une force est obtenu en dérivant l'énergie de déformation élastique par rapport à cette force."},
+      {q:"Pour lever l'indétermination d'un système hyperstatique, on utilise notamment :",
+       options:["la méthode des forces ou les théorèmes énergétiques","uniquement l'essai de traction","uniquement l'essai de dureté","le rapport de transmission d'engrenage"],
+       correct:0, explain:"La méthode des forces (ou les théorèmes énergétiques comme Castigliano) ajoute des équations de compatibilité des déplacements pour résoudre un système hyperstatique."},
+      {q:"Une charge répartie q(x) le long d'une poutre est reliée à l'effort tranchant T(x) par la relation :",
+       options:["dT/dx = -q(x)","T(x) = q(x)·S","T(x) = E·q(x)","dq/dx = T(x)"],
+       correct:0, explain:"La relation différentielle classique en RDM est dT/dx = -q(x) : la pente de l'effort tranchant est donnée par l'opposé de la charge répartie."},
+      {q:"Le critère de Von Mises est utilisé pour :",
+       options:["vérifier la tenue d'un matériau sous un état de contrainte combiné","mesurer la dureté d'un matériau","calculer un rapport de transmission","mesurer la conductivité thermique"],
+       correct:0, explain:"Von Mises compare une contrainte équivalente, calculée à partir de l'état de contrainte complet, à la limite d'élasticité Re du matériau."},
+      {q:"Le flambement d'une poutre élancée en compression correspond à :",
+       options:["une rupture par cisaillement pur","une instabilité qui provoque un déplacement latéral brutal sous une charge critique","un phénomène uniquement thermique","une augmentation de la dureté du matériau"],
+       correct:1, explain:"Le flambement est une instabilité élastique : au-delà d'une charge critique (Euler), une poutre élancée comprimée se déforme brutalement latéralement, sans que le matériau ait atteint sa limite de résistance."},
+      {q:"La longueur de flambement Lf dépend principalement :",
+       options:["des conditions aux limites de la poutre (encastré-libre, rotule-rotule, etc.)","uniquement de la masse volumique du matériau","uniquement de la couleur de la pièce","du rapport de transmission d'un engrenage voisin"],
+       correct:0, explain:"Lf dépend des conditions d'appui aux extrémités de la poutre : une poutre encastrée-libre a une longueur de flambement différente d'une poutre rotule-rotule pour une même longueur réelle."},
+      {q:"En flexion déviée, on parle d'une sollicitation où :",
+       options:["il n'y a qu'un seul moment fléchissant dans un seul plan","les moments fléchissants agissent simultanément dans deux plans différents","seul l'effort normal est présent","seule la torsion est présente"],
+       correct:1, explain:"La flexion déviée correspond à une flexion combinée dans deux plans (Mfy et Mfz simultanément), contrairement à la flexion plane simple."},
+      {q:"Un arbre de transmission soumis à la fois à un couple de torsion et à un effort de flexion (dû à son propre poids ou à des engrenages) est un exemple typique de :",
+       options:["sollicitation simple de traction","sollicitation composée flexion + torsion","essai de dureté","essai de résilience"],
+       correct:1, explain:"C'est l'exemple classique de sollicitation composée en RDM, nécessitant un critère de résistance combiné (Tresca ou Von Mises) plutôt qu'une simple vérification en flexion ou en torsion seule."},
+      {q:"Le moment quadratique I d'une section dépend principalement de :",
+       options:["uniquement de la matière dont est fait la poutre","de la forme et de la répartition de la matière dans la section","uniquement de la longueur de la poutre","de la couleur de la poutre"],
+       correct:1, explain:"Le moment quadratique I caractérise géométriquement comment la matière d'une section est répartie autour de l'axe neutre ; une section en I bien conçue a un I plus grand qu'une section pleine de même surface."},
+      {q:"Pour une même quantité de matière, une section en I (poutrelle) est souvent préférée à une section pleine rectangulaire en flexion parce que :",
+       options:["elle est toujours moins chère à produire, sans autre avantage","elle concentre la matière loin de l'axe neutre, augmentant le moment quadratique I pour une masse donnée","elle est plus facile à peindre","elle élimine tout besoin de calcul"],
+       correct:1, explain:"Éloigner la matière de l'axe neutre (comme dans une poutrelle en I) augmente fortement I sans augmenter autant la masse, ce qui améliore la résistance en flexion pour un poids donné."},
+      {q:"La contrainte de cisaillement due à l'effort tranchant T est en général :",
+       options:["maximale au niveau de l'axe neutre de la section pour une section rectangulaire","toujours nulle dans une poutre","identique en tout point de la section","uniquement présente en torsion"],
+       correct:0, explain:"Pour une section rectangulaire simple, la contrainte de cisaillement due à T est maximale au niveau de l'axe neutre et nulle sur les bords supérieur et inférieur de la section."},
+      {q:"Une poutre encastrée à une extrémité et libre à l'autre (encastrement-libre) porte le nom de :",
+       options:["poutre sur deux appuis simples","poutre console (ou poutre en porte-à-faux)","poutre hyperstatique obligatoirement","arbre de transmission"],
+       correct:1, explain:"Une poutre fixée à une seule extrémité et libre à l'autre est appelée poutre console ou poutre en porte-à-faux — un balcon en est un exemple courant."},
+      {q:"Dans le cas d'une poutre sur deux appuis simples (rotule + appui simple) avec une seule charge ponctuelle, le système est :",
+       options:["hyperstatique de degré 3","isostatique (le nombre d'inconnues égale le nombre d'équations d'équilibre)","impossible à résoudre","toujours instable"],
+       correct:1, explain:"Avec seulement deux appuis simples adaptés (une rotule et un appui simple), le nombre de réactions inconnues correspond exactement au nombre d'équations d'équilibre disponibles : le système est isostatique."},
+      {q:"Le moment fléchissant maximal dans une poutre sur deux appuis simples avec une charge ponctuelle centrée se situe :",
+       options:["à une extrémité de la poutre","au milieu de la poutre, sous la charge","toujours à l'appui le plus rigide","nulle part, le moment est constant"],
+       correct:1, explain:"Pour une charge ponctuelle centrée sur une poutre simplement appuyée, le moment fléchissant est maximal exactement sous le point d'application de la charge, au milieu de la poutre."},
+      {q:"Augmenter la longueur libre d'une poutre comprimée (sans changer sa section) a pour effet sur le flambement de :",
+       options:["augmenter la charge critique de flambement","diminuer la charge critique de flambement","n'avoir aucun effet","annuler tout risque de flambement"],
+       correct:1, explain:"D'après la formule d'Euler, la charge critique de flambement est inversement proportionnelle au carré de la longueur de flambement : plus la poutre est longue, plus elle flambe facilement sous une charge plus faible."},
+      {q:"Le critère de Tresca, comparé au critère de Von Mises, est généralement considéré comme :",
+       options:["toujours identique dans tous les cas","légèrement plus conservateur (plus sécuritaire) dans la plupart des configurations","totalement inutilisable en pratique","applicable uniquement aux céramiques"],
+       correct:1, explain:"Le critère de Tresca donne en général une contrainte équivalente légèrement supérieure à celle de Von Mises pour un même état de contrainte, ce qui le rend un peu plus conservateur (sécuritaire) dans le dimensionnement."},
+      {q:"Le coefficient de sécurité utilisé en RDM sert à :",
+       options:["compenser les incertitudes (matériau, chargement, fabrication) en dimensionnant la pièce au-delà du strict nécessaire théorique","remplacer le calcul de la contrainte réelle","annuler le besoin de connaître Re du matériau","être ignoré dès que le calcul semble correct"],
+       correct:0, explain:"Le coefficient de sécurité couvre les incertitudes réelles (variabilité du matériau, charges mal connues, défauts de fabrication) en imposant une marge entre la contrainte admissible et la limite réelle du matériau."},
+      {q:"L'effort tranchant T(x) et le moment fléchissant Mf(x) le long d'une poutre sont liés par la relation :",
+       options:["dMf/dx = T(x)","Mf(x) = T(x)²","dT/dx = Mf(x)","aucune relation entre les deux"],
+       correct:0, explain:"La dérivée du moment fléchissant par rapport à x donne l'effort tranchant : dMf/dx = T(x), une relation différentielle très utile pour tracer les diagrammes en RDM."},
+      {q:"Dans une poutre en flexion, la fibre la plus éloignée de l'axe neutre subit :",
+       options:["la même contrainte que l'axe neutre","toujours une contrainte nulle","la contrainte normale la plus élevée (traction ou compression maximale)","uniquement du cisaillement"],
+       correct:2, explain:"En flexion, la contrainte normale σ(y) = Mf·y/I est maximale là où y (la distance à l'axe neutre) est la plus grande, donc sur les fibres extrêmes de la section."},
+      {q:"Un système hyperstatique de degré 1 nécessite, pour être résolu, en plus des équations d'équilibre :",
+       options:["aucune équation supplémentaire","exactement une équation de compatibilité des déplacements","une infinité d'équations","uniquement un essai de traction"],
+       correct:1, explain:"Le degré d'hyperstaticité indique le nombre d'équations de compatibilité supplémentaires nécessaires ; un degré 1 signifie qu'il en faut exactement une, en plus des équations d'équilibre classiques."},
+      {q:"La rigidité en torsion d'un arbre (résistance à se tordre pour un couple donné) dépend notamment de :",
+       options:["uniquement de sa longueur","du module de cisaillement G et du moment quadratique polaire I0 du matériau et de la section","uniquement de sa couleur","uniquement de sa masse volumique"],
+       correct:1, explain:"L'angle de torsion par unité de longueur θ' = Mt/(G·I0) montre que la rigidité en torsion dépend du module de cisaillement G du matériau et du moment quadratique polaire I0 de la section."},
+      {q:"Pourquoi utilise-t-on souvent des arbres de section creuse (tubes) plutôt que pleine en torsion ?",
+       options:["parce que la matière au centre d'une section pleine contribue peu à la résistance en torsion, donc l'enlever allège la pièce sans trop réduire sa résistance","parce qu'un tube est toujours moins cher à produire","parce qu'un arbre plein ne peut jamais transmettre de couple","parce que la section n'a aucune influence en torsion"],
+       correct:0, explain:"En torsion, la contrainte est maximale en surface et quasi nulle au centre : retirer la matière centrale (arbre creux) allège la pièce en sacrifiant peu de résistance, un principe très utilisé en conception mécanique optimisée."}
+    ]
+  }
+};
+
+/* ---------------- quiz engine ---------------- */
+let currentQuiz = null, qIndex = 0, qScore = 0;
+
+function renderPicker(){
+  const picker = document.getElementById('quiz-picker');
+  picker.innerHTML = '';
+  Object.keys(QUIZZES).forEach(key=>{
+    const b = document.createElement('button');
+    b.textContent = QUIZZES[key].label;
+    b.className = (key===currentQuiz) ? 'active' : '';
+    b.addEventListener('click', ()=>startQuiz(key));
+    picker.appendChild(b);
+  });
+}
+
+function startQuiz(key){
+  currentQuiz = key; qIndex = 0; qScore = 0;
+  renderPicker();
+  renderQuestion();
+}
+
+function renderQuestion(){
+  const area = document.getElementById('quiz-area');
+  const set = QUIZZES[currentQuiz];
+  if (qIndex >= set.questions.length){
+    area.innerHTML = `
+      <div class="q-card">
+        <div class="q-score">Score : ${qScore} / ${set.questions.length}</div>
+        <p>Relis la section correspondante pour les points ratés, puis retente le quiz si besoin.</p>
+        <button class="q-next" id="restart-btn">Recommencer ce quiz</button>
+      </div>`;
+    document.getElementById('restart-btn').addEventListener('click', ()=>startQuiz(currentQuiz));
+    return;
+  }
+  const item = set.questions[qIndex];
+  area.innerHTML = `
+    <div class="q-progress">Question ${qIndex+1} / ${set.questions.length} — ${set.label}</div>
+    <div class="q-card">
+      <div class="q-prompt">${item.q}</div>
+      <div id="opts"></div>
+      <div id="explain-area"></div>
+    </div>`;
+  const optsDiv = document.getElementById('opts');
+  item.options.forEach((opt, i)=>{
+    const btn = document.createElement('button');
+    btn.className = 'q-opt';
+    btn.textContent = opt;
+    btn.addEventListener('click', ()=>answerQuestion(i));
+    optsDiv.appendChild(btn);
+  });
+}
+
+function answerQuestion(choice){
+  const set = QUIZZES[currentQuiz];
+  const item = set.questions[qIndex];
+  const opts = document.querySelectorAll('#opts .q-opt');
+  opts.forEach((btn, i)=>{
+    btn.disabled = true;
+    if (i === item.correct) btn.classList.add('correct');
+    else if (i === choice) btn.classList.add('wrong');
+  });
+  if (choice === item.correct) qScore++;
+  const explainArea = document.getElementById('explain-area');
+  explainArea.innerHTML = `<div class="q-explain">${item.explain}</div>
+    <button class="q-next" id="next-btn">${(qIndex+1 < set.questions.length) ? 'Question suivante' : 'Voir le score'}</button>`;
+  document.getElementById('next-btn').addEventListener('click', ()=>{
+    qIndex++; renderQuestion();
+  });
+}
+
+renderPicker();
+startQuiz('materiaux');
+
+
+/* ================= RDM SIMULATOR ENGINE ================= */
+(function(){
+  const $ = id => document.getElementById(id);
+  const materials = {
+    steel:{E:210e9,Re:250e6},
+    aluminium:{E:70e9,Re:150e6},
+    concrete:{E:30e9,Re:25e6}
+  };
+  function fmt(v,unit=''){
+    if(!Number.isFinite(v)) return '—';
+    const a=Math.abs(v);
+    let n=a>=1e6?(v/1e6).toFixed(2)+' MN':a>=1e3?(v/1e3).toFixed(2)+' kN':v.toFixed(2)+' N';
+    return n+(unit?' '+unit:'');
+  }
+  function fmtSmall(v,unit=''){
+    if(!Number.isFinite(v)) return '—';
+    const a=Math.abs(v);
+    let n=a>=1e9?(v/1e9).toFixed(3)+' G':a>=1e6?(v/1e6).toFixed(3)+' M':a>=1e3?(v/1e3).toFixed(3)+' k':v.toFixed(3);
+    return n+(unit?' '+unit:'');
+  }
+  function setError(msg){$('sim-error').textContent=msg;$('sim-error').style.display=msg?'block':'none';}
+  function getData(){
+    const L=+$('sim-length').value,F=+$('sim-load').value,x=+$('sim-position').value,q=+$('sim-q').value;
+    const support=$('sim-support').value, sec=$('sim-section').value;
+    let E,Re;
+    if($('sim-material').value==='custom'){E=+$('sim-E').value*1e9;Re=+$('sim-Re').value*1e6}else{({E,Re}=materials[$('sim-material').value]);}
+    let I,c;
+    if(sec==='rect'){const b=+$('sim-b').value/1000,h=+$('sim-h').value/1000;I=b*h**3/12;c=h/2;if(!(b>0&&h>0)) throw Error('Les dimensions b et h doivent être positives.');}
+    else {const d=+$('sim-d').value/1000;I=Math.PI*d**4/64;c=d/2;if(!(d>0)) throw Error('Le diamètre doit être positif.');}
+    if(!(L>0)) throw Error('La longueur L doit être positive.');
+    if(F<0||q<0) throw Error('Les charges doivent être positives ou nulles.');
+    if(x<0||x>L) throw Error('La position de la charge doit être comprise entre 0 et L.');
+    if(!(E>0&&Re>0)) throw Error('Les propriétés du matériau doivent être positives.');
+    return {L,F,x,q,support,E,Re,I,c};
+  }
+  function calc(d){
+    const {L,F,x,q,support,E,Re,I,c}=d;
+    let R1=0,R2=0,M0=0,Vmax=0,Mmax=0,vmax=0,xM=L/2;
+    if(support==='simply'){
+      R2=(F*x+q*L*(L/2))/L; R1=F+q*L-R2;
+      // Candidate positions for maximum M: point load, midpoint for q, and support boundaries.
+      const cand=[0,L,x];
+      if(q>0) cand.push(R1/q);
+      function shear(z){return R1-(z>=x?F:0)-q*z;}
+      function moment(z){return R1*z-(z>=x?F*(z-x):0)-q*z*z/2;}
+      const xs=[]; for(const z of cand) if(z>=0&&z<=L) xs.push(z);
+      for(const z of xs){const m=Math.abs(moment(z));if(m>Mmax){Mmax=m;xM=z;}}
+      const N=300; for(let i=0;i<=N;i++){const z=L*i/N;Vmax=Math.max(Vmax,Math.abs(shear(z)));}
+      // Deflection by numerical integration of curvature EI y'' = M, enforcing y(0)=y(L)=0.
+      const n=1000,dx=L/n;let slope=0,y=0;const arr=[];let yAtL=0;
+      function M(z){return moment(z);}
+      // y(z) = double integral M/EI + C1*z; C1 chosen so y(L)=0
+      let integralM=0, weighted=0;
+      for(let i=0;i<=n;i++){const z=i*dx;const mv=M(z);if(i>0){const zp=(i-1)*dx, mp=M(zp);integralM+=(mp+mv)/2/E/I*dx;weighted+=((zp*mp)+(z*mv))/2/E/I*dx;}}
+      const C1=-weighted/L;
+      let yy=0, prevCurv=M(0)/E/I, maxY=0;
+      for(let i=0;i<=n;i++){const z=i*dx,curv=M(z)/E/I; if(i>0){yy += (prevCurv+curv)/2*dx; yy += C1*0; } const yval=yy+C1*z; if(Math.abs(yval)>Math.abs(maxY)){maxY=yval;vmax=Math.abs(yval);} prevCurv=curv;}
+      // The simple integration above accumulates the linear slope term separately through C1*z.
+      vmax=Math.abs(maxY);
+      return {R1,R2,M0,Vmax,Mmax,vmax,xM};
+    }
+    // Cantilever: loads start at fixed end x=0; downward loads produce hogging moment.
+    R1=F+q*L; M0=F*x+q*L*L/2;
+    function shear(z){return F*(z<=x?1:0)+q*(L-z);}
+    function moment(z){return F*Math.max(x-z,0)+q*(L-z)**2/2;}
+    Mmax=Math.abs(moment(0));xM=0;Vmax=Math.abs(shear(0));
+    // Numerical integration of curvature with y(0)=0 and slope(0)=0.
+    const n=1200,dx=L/n;let slope=0,y=0;vmax=0;
+    for(let i=0;i<n;i++){
+      const z=i*dx,z2=(i+1)*dx;
+      const k1=moment(z)/(E*I),k2=moment(z2)/(E*I);
+      slope += (k1+k2)/2*dx;
+      y += slope*dx;
+      vmax=Math.max(vmax,Math.abs(y));
+    }
+    return {R1,R2:0,M0,Vmax,Mmax,vmax,xM};
+  }
+  function draw(d,r){
+    const W=900,H=300,left=70,right=40,beamY=120,beamL=W-left-right,scale=Math.min(1,0.18/(Math.max(r.vmax/d.L,1e-9)));
+    const defAmp=Math.min(75,Math.max(10,r.vmax*scale));
+    const xpx=z=>left+z/d.L*beamL;
+    let loadSvg='';
+    if(d.q>0){for(let i=0;i<=8;i++){const x=left+i/8*beamL;loadSvg+=`<line x1="${x}" y1="55" x2="${x}" y2="108" stroke="#1f5fa8"/><polygon points="${x},108 ${x-4},98 ${x+4},98" fill="#1f5fa8"/>`;}}
+    if(d.F>0){const xp=xpx(d.x);loadSvg+=`<line x1="${xp}" y1="38" x2="${xp}" y2="108" stroke="#c1432b" stroke-width="2"/><polygon points="${xp},108 ${xp-6},96 ${xp+6},96" fill="#c1432b"/><text x="${xp+8}" y="35" font-size="13" fill="#c1432b">F</text>`;}
+    let supportSvg='';
+    if(d.support==='simply'){
+      supportSvg=`<polygon points="${left},125 ${left-18},158 ${left+18},158" fill="none" stroke="#263746" stroke-width="2"/><line x1="${left-25}" y1="158" x2="${left+25}" y2="158" stroke="#263746"/><circle cx="${left+beamL}" cy="137" r="10" fill="none" stroke="#263746" stroke-width="2"/><line x1="${left+beamL-20}" y1="158" x2="${left+beamL+20}" y2="158" stroke="#263746"/>`;
+    }else{
+      supportSvg=`<line x1="${left}" y1="75" x2="${left}" y2="170" stroke="#263746" stroke-width="8"/><line x1="${left-8}" y1="80" x2="${left+beamL}" y2="80" stroke="#9aa6b0" stroke-width="1" opacity=".5"/>`;
+    }
+    const points=[]; for(let i=0;i<=50;i++){const z=i/50*d.L;let yy;if(d.support==='cantilever'){const rel=Math.max(d.L-z,0);yy=-defAmp*(rel/d.L)**2}else{yy=-defAmp*4*(z/d.L)*(1-z/d.L);}points.push(`${xpx(z)},${beamY+yy}`)}
+    $('sim-svg').innerHTML=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" aria-label="Schéma de poutre simulée"><line x1="${left}" y1="${beamY}" x2="${left+beamL}" y2="${beamY}" stroke="#123a63" stroke-width="7" stroke-linecap="round"/>${supportSvg}${loadSvg}<path d="M ${points.join(' L ')}" fill="none" stroke="#2f8a5c" stroke-width="3" stroke-dasharray="7 5"/><text x="${left}" y="205" font-size="13" fill="#5c6975">0</text><text x="${left+beamL-20}" y="205" font-size="13" fill="#5c6975">L</text><text x="${W/2-80}" y="245" font-size="13" fill="#52616e">Déformée qualitative (amplifiée)</text><text x="${W/2-55}" y="275" font-size="13" fill="#123a63">L = ${d.L.toFixed(2)} m</text></svg>`;
+  }
+  function run(){
+    try{
+      setError('');const d=getData(),r=calc(d),sigma=r.Mmax*d.c/d.I,safety=d.Re/sigma;
+      $('sim-mmax').textContent=fmt(r.Mmax,'N·m');$('sim-vmax').textContent=(r.vmax*1000).toFixed(2)+' mm';$('sim-smax').textContent=(sigma/1e6).toFixed(2)+' MPa';$('sim-safety').textContent=safety.toFixed(2);
+      $('sim-r1').textContent=fmt(r.R1);$('sim-r2').textContent=fmt(r.R2);$('sim-tmax').textContent=fmt(r.Vmax);$('sim-I').textContent=fmtSmall(d.I,'m⁴');$('sim-Eout').textContent=(d.E/1e9).toFixed(1)+' GPa';
+      const st=$('sim-status');st.classList.toggle('warn',safety<1);st.textContent=safety>=1?`Vérification pédagogique : σmax < Re. Marge théorique Re/σmax = ${safety.toFixed(2)}.`:`Attention pédagogique : σmax dépasse Re avec ce modèle (${(sigma/1e6).toFixed(2)} MPa > ${(d.Re/1e6).toFixed(2)} MPa).`;
+      draw(d,r);
+    }catch(e){setError(e.message);}
+  }
+  function reset(){
+    $('sim-support').value='simply';$('sim-material').value='steel';$('sim-length').value=4;$('sim-load').value=1000;$('sim-position').value=2;$('sim-q').value=0;$('sim-section').value='rect';$('sim-b').value=60;$('sim-h').value=100;$('sim-d').value=80;$('sim-E').value=210;$('sim-Re').value=250;toggleFields();run();
+  }
+  function toggleFields(){
+    $('sim-rect-fields').style.display=$('sim-section').value==='rect'?'grid':'none';$('sim-d-field').style.display=$('sim-section').value==='circle'?'block':'none';$('sim-custom-material').style.display=$('sim-material').value==='custom'?'block':'none';
+    $('sim-position').disabled=$('sim-support').value==='cantilever'; if($('sim-support').value==='cantilever') $('sim-position').value=Math.min(+$('sim-position').value,+$('sim-length').value);
+  }
+  document.addEventListener('DOMContentLoaded',()=>{
+    if(!$('sim-calc')) return;
+    $('sim-calc').addEventListener('click',run);$('sim-reset').addEventListener('click',reset);$('sim-section').addEventListener('change',toggleFields);$('sim-material').addEventListener('change',toggleFields);$('sim-support').addEventListener('change',toggleFields);$('sim-length').addEventListener('change',()=>{if($('sim-support').value==='cantilever')$('sim-position').value=$('sim-length').value;});
+    document.querySelectorAll('[data-simcase]').forEach(b=>b.addEventListener('click',()=>{const c=b.dataset.simcase;if(c==='light'){$('sim-material').value='aluminium';$('sim-length').value=3;$('sim-load').value=1200;$('sim-position').value=1.5;$('sim-q').value=0;$('sim-b').value=50;$('sim-h').value=80;}if(c==='distributed'){$('sim-material').value='steel';$('sim-length').value=5;$('sim-load').value=0;$('sim-position').value=2.5;$('sim-q').value=700;$('sim-b').value=60;$('sim-h').value=100;$('sim-support').value='simply';}if(c==='cantilever'){$('sim-material').value='steel';$('sim-support').value='cantilever';$('sim-length').value=2.5;$('sim-load').value=900;$('sim-position').value=2.5;$('sim-q').value=0;$('sim-b').value=50;$('sim-h').value=100;}toggleFields();run();document.getElementById('r-simulateur').scrollIntoView({behavior:'smooth',block:'start'});}));
+    toggleFields();run();
+  });
+})();
+
+</script>
+</body>
+</html>
